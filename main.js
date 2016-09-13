@@ -15,14 +15,13 @@ let chromaKey = function(videoElem, context2D1, context2D2,
   return;
 };
 
-let setUpAnimationFrame = function (videoElem, context2D1, context2D2,
-                                    width, height) {
+let setUpAnimationFrame = function (videoElem, processVideoFrameFunction) {
   let animationCallback = function() {
     if (videoElem.paused || videoElem.ended) {
       return;
     }
 
-    chromaKey(videoElem, context2D1, context2D2, width, height);
+    processVideoFrameFunction(videoElem);
 
     // TODO: Use requestAnimationFrame.
     setTimeout(animationCallback, 40);
@@ -42,8 +41,10 @@ let main = () => {
     let context2D2 = canvas2Elem.getContext("2d");
 
     videoElem.addEventListener("play", () => {
-      setUpAnimationFrame(videoElem, context2D1, context2D2,
-                          videoElem.width / 2, videoElem.height / 2);
+      setUpAnimationFrame(videoElem, (videoElem) => {
+        chromaKey(videoElem, context2D1, context2D2,
+                  videoElem.width / 2, videoElem.height / 2);
+      });
     }, false);
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
