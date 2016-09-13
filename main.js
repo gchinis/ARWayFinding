@@ -31,6 +31,75 @@ let setUpAnimationFrame = function (videoElem, processVideoFrameFunction) {
   animationCallback();
 };
 
+let createMarkerDetector = function(canvasElem, detectionThreshold) {
+  // Create a RGB raster object for the 2D canvas. JSARToolKit uses
+  // raster objects to read image data.  Note that you need to set
+  // canvas.changed = true on every frame.
+  let raster = new NyARRgbRaster_Canvas2D(canvasElem);
+
+  // FLARParam is the thing used by FLARToolKit to set camera
+  // parameters.  Here we create a FLARParam for images with 320x240
+  // pixel dimensions.
+  let param = new FLARParam(320, 240);
+
+  // The FLARMultiIdMarkerDetector is the actual detection engine for
+  // marker detection.  It detects multiple ID markers. ID markers are
+  // special markers that encode a number.
+  let detector = new FLARMultiIdMarkerDetector(param, 1024);
+
+  // For tracking video set continue mode to true. In continue mode,
+  // the detector tracks markers across multiple frames.
+  detector.setContinueMode(true);
+
+  // Create a NyARTransMatResult object for getting the marker
+  // translation matrices.
+  var resultMat = new NyARTransMatResult();
+
+  let detectMarkers = function() {
+    canvasElem.changed = true;
+
+    // Do marker detection by using the detector object on the raster object.
+    // The threshold parameter determines the threshold value
+    // for turning the video frame into a 1-bit black-and-white image.
+    var markerCount = detector.detectMarkerLite(raster, detectionThreshold);
+
+    var markers = {};
+
+    // Go through the detected markers and get their IDs and
+    // transformation matrices.
+    for (var idx = 0; idx < markerCount; idx++) {
+      // Get the ID marker data for the current marker.  ID markers
+      // are special kind of markers that encode a number.  The bytes
+      // for the number are in the ID marker data.
+      var id = detector.getIdMarkerData(idx);
+
+      // Read bytes from the id packet.
+      var currId = -1;
+      // This code handles only 32-bit numbers or shorter.
+      if (id.packetLength <= 4) {
+        currId = 0;
+        for (var i = 0; i < id.packetLength; i++) {
+          currId = (currId << 8) | id.getPacketData(i);
+        }
+      }
+
+      // If this is a new id, let's start tracking it.
+      if (markers[currId] == null) {
+        markers[currId] = {};
+      }
+      // Get the transformation matrix for the detected marker.
+      detector.getTransformMatrix(idx, resultMat);
+
+      // Copy the result matrix into our marker tracker object.
+      markers[currId].transform = Object.asCopy(resultMat);
+    }
+
+    return markers;
+  };
+
+  return detectMarkers;
+};
+
 let main = () => {
   window.addEventListener("load", () => {
     let videoElem = document.getElementById("video");
@@ -40,10 +109,17 @@ let main = () => {
     let canvas2Elem = document.getElementById("c2");
     let context2D2 = canvas2Elem.getContext("2d");
 
+    let detectMarkers = createMarkerDetector(canvas1Elem, 170);
+
     videoElem.addEventListener("play", () => {
       setUpAnimationFrame(videoElem, (videoElem) => {
         chromaKey(videoElem, context2D1, context2D2,
                   videoElem.width / 2, videoElem.height / 2);
+
+        let markers = detectMarkers();
+        if (Object.keys(markers).length > 0) {
+          console.log(markers);
+        }
       });
     }, false);
 
@@ -56,11 +132,11 @@ let main = () => {
   });
 };
 
-//main();
+main();
 
 
 window.DEBUG = true;
-window.onload = function() {
+window.xxonload = function() {
   var w = Magi.Bin.load('/3dparty/walas.binm');
   w.flatNormals = false;
   w.onload = function() {
