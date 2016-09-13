@@ -1,55 +1,58 @@
-window.processor = {
-  timerCallback: function() {
-    // if (this.video.paused || this.video.ended) {
-    //   return;
-    // }
-    this.computeFrame();
-    let self = this;
-    setTimeout(function () {
-        self.timerCallback();
-      }, 40);
-  },
+let chromaKey = function(videoElem, context2D1, context2D2,
+                         width, height) {
+  context2D1.drawImage(videoElem, 0, 0, width, height);
+  let frame = context2D1.getImageData(0, 0, width, height);
+  let l = frame.data.length / 4;
 
-  doLoad: function() {
-    this.video = document.getElementById("video");
+  for (let i = 0; i < l; i++) {
+    let r = frame.data[i * 4 + 0];
+    let g = frame.data[i * 4 + 1];
+    let b = frame.data[i * 4 + 2];
+    if (g < 50 && r > 100 && b < 50)
+      frame.data[i * 4 + 3] = 0;
+  }
+  context2D2.putImageData(frame, 0, 0);
+  return;
+};
 
-    this.c1 = document.getElementById("c1");
-    this.ctx1 = this.c1.getContext("2d");
-    this.c2 = document.getElementById("c2");
-    this.ctx2 = this.c2.getContext("2d");
+let setUpAnimationFrame = function (videoElem, context2D1, context2D2,
+                                    width, height) {
+  let animationCallback = function() {
+    if (videoElem.paused || videoElem.ended) {
+      return;
+    }
 
-    let self = this;
-    this.video.addEventListener("play", function() {
-        self.width = self.video.videoWidth / 2;
-        self.height = self.video.videoHeight / 2;
-        self.timerCallback();
-      }, false);
+    chromaKey(videoElem, context2D1, context2D2, width, height);
+
+    // TODO: Use requestAnimationFrame.
+    setTimeout(animationCallback, 40);
+  };
+
+  // Kick-start the process.
+  animationCallback();
+};
+
+let main = () => {
+  window.addEventListener("load", () => {
+    let videoElem = document.getElementById("video");
+
+    let canvas1Elem = document.getElementById("c1");
+    let context2D1 = canvas1Elem.getContext("2d");
+    let canvas2Elem = document.getElementById("c2");
+    let context2D2 = canvas2Elem.getContext("2d");
+
+    videoElem.addEventListener("play", () => {
+      setUpAnimationFrame(videoElem, context2D1, context2D2,
+                          videoElem.width / 2, videoElem.height / 2);
+    }, false);
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      // Not adding `{ audio: true }` since we only want video now
       navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-        this.video.src = window.URL.createObjectURL(stream);
-        this.video.play();
+        videoElem.src = window.URL.createObjectURL(stream);
+        videoElem.play();
       });
     }
-  },
-
-  computeFrame: function() {
-    console.log("drawing", this.width, this.height);
-    this.width = 320;
-    this.height = 240;
-    this.ctx1.drawImage(this.video, 0, 0, this.width, this.height);
-    let frame = this.ctx1.getImageData(0, 0, this.width, this.height);
-    let l = frame.data.length / 4;
-
-    for (let i = 0; i < l; i++) {
-      let r = frame.data[i * 4 + 0];
-      let g = frame.data[i * 4 + 1];
-      let b = frame.data[i * 4 + 2];
-      if (g < 50 && r > 100 && b < 50)
-        frame.data[i * 4 + 3] = 0;
-    }
-    this.ctx2.putImageData(frame, 0, 0);
-    return;
-  }
+  });
 };
+
+main();
