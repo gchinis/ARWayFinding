@@ -2,32 +2,71 @@
   <head>
     <meta charset="utf-8">
     <style>
-     body {
-         background: black;
-         color:#CCCCCC; 
-     }
-     #c2 {
-         background-image: url(chroma-background.png);
-         background-repeat: no-repeat;
-     }
-     div {
-         float: left;
-         border: 1px solid #444444;
-         padding:10px;
-         margin: 10px;
-         background: #3B3B3B;
-     }
+     /* body {
+        background: black;
+        color:#CCCCCC; 
+        }
+        #c2 {
+        background-image: url(chroma-background.png);
+        background-repeat: no-repeat;
+        }
+        div {
+        float: left;
+        border: 1px solid #444444;
+        padding:10px;
+        margin: 10px;
+        background: #3B3B3B;
+        } */
     </style>
+
+    <script src="3dparty/JSARToolkit/NyAs3Utils.js"></script>
+    <script src="3dparty/JSARToolkit/FLARArrayUtil.js"></script>
+    <script src="3dparty/JSARToolkit/FLARException.js"></script>
+    <script src="3dparty/JSARToolkit/FLARMat.js"></script>
+    <script src="3dparty/JSARToolkit/FLARRgbPixelReader.js"></script>
+    <script src="3dparty/JSARToolkit/NyARHistogramAnalyzer.js"></script>
+    <script src="3dparty/JSARToolkit/NyARPca2d.js"></script>
+    <script src="3dparty/JSARToolkit/NyARRasterReader.js"></script>
+    <script src="3dparty/JSARToolkit/NyARTypes.js"></script>
+    <script src="3dparty/JSARToolkit/FLARRasterFilter.js"></script>
+    <script src="3dparty/JSARToolkit/FLARTypes.js"></script>
+    <script src="3dparty/JSARToolkit/NyARLabel.js"></script>
+    <script src="3dparty/JSARToolkit/FLARLabeling.js"></script>
+    <script src="3dparty/JSARToolkit/NyARParam.js"></script>
+    <script src="3dparty/JSARToolkit/FLARParam.js"></script>
+    <script src="3dparty/JSARToolkit/NyARRaster.js"></script>
+    <script src="3dparty/JSARToolkit/FLARRaster.js"></script>
+    <script src="3dparty/JSARToolkit/NyARCode.js"></script>
+    <script src="3dparty/JSARToolkit/FLARCode.js"></script>
+    <script src="3dparty/JSARToolkit/NyARMatch.js"></script>
+    <script src="3dparty/JSARToolkit/NyARRasterAnalyzer.js"></script>
+    <script src="3dparty/JSARToolkit/FLARRasterAnalyzer.js"></script>
+    <script src="3dparty/JSARToolkit/NyARRasterFilter.js"></script>
+    <script src="3dparty/JSARToolkit/NyARSquareDetect.js"></script>
+    <script src="3dparty/JSARToolkit/FLARSquareDetect.js"></script>
+    <script src="3dparty/JSARToolkit/NyARTransMat.js"></script>
+    <script src="3dparty/JSARToolkit/FLARTransMat.js"></script>
+    <script src="3dparty/JSARToolkit/NyARUtils.js"></script>
+    <script src="3dparty/JSARToolkit/NyARIdMarker.js"></script>
+    <script src="3dparty/JSARToolkit/NyARPickup.js"></script>
+    <script src="3dparty/JSARToolkit/FLARProcessor.js"></script>
+    <script src="3dparty/JSARToolkit/NyARDetector.js"></script>
+    <script src="3dparty/JSARToolkit/FLARDetector.js"></script>
+    <script src="3dparty/JSARToolkit/FLARIdMarkerDetector.js"></script>
+    <script src="3dparty/JSARToolkit/NyARSingleMarkerProcesser.js"></script>
+    <script src="3dparty/JSARToolkit/NyUtils.js"></script>
+    <script src="3dparty/magi.js"></script>
+    <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
   </head>
 
   <body>
-    <div>
-      <video id="video" width="640" height="480" autoplay="autoplay" style="display: none"></video>
-    </div>
-    <div>
-      <canvas id="c1" width="320" height="240"></canvas>
-      <canvas id="c2" width="320" height="240"></canvas>
-    </div>
-    <script type="text/javascript" src="bundle.js" charset="utf-8"></script>
+    <!-- <div>
+         <video id="video" width="640" height="480" autoplay="autoplay" style="display: none"></video>
+         </div>
+         <div>
+         <canvas id="c1" width="320" height="240"></canvas>
+         <canvas id="c2" width="320" height="240"></canvas>
+         </div>
+         <script type="text/javascript" src="bundle.js" charset="utf-8"></script> -->
   </body>
 </html>
