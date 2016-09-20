@@ -25,6 +25,6 @@
     "webpack-dev-server": "^1.15.1"
   },
   "dependencies": {
-    "three.js": "^0.77.1"
+    "three": "^0.81.0"
   }
 }
