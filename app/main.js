@@ -1,16 +1,11 @@
-var THREE = require('three');
+const THREE = require('three');
+import { artoolkit, ARController } from "./artoolkit.js";
 
-require('./3dparty/jsartoolkit5/js/artoolkit.api.js');
-var {artoolkit, ARController, ARCameraParam} = require("exports?window.ARController&window.artoolkit&window.ARCameraParam!./3dparty/jsartoolkit5/js/artoolkit.three.js");
-console.log(ARController.getUserMediaThreeScene);
-
-window.THREE = THREE;
-window.ARThreeOnLoad = function() {
+const main = () => {
 	ARController.getUserMediaThreeScene({
     maxARVideoSize: 320,
     cameraParam: '3dparty/jsartoolkit5/Data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
     onSuccess: function(arScene, arController, arCamera) {
-
       document.body.className = arController.orientation;
 
       arController.setPatternDetectionMode(artoolkit.AR_MATRIX_CODE_DETECTION);
@@ -65,7 +60,6 @@ window.ARThreeOnLoad = function() {
       tick();
     }
   });
-
-	delete window.ARThreeOnLoad;
-
 };
+
+main();
