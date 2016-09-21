@@ -21,9 +21,9 @@ module.exports = function(config) {
     concurrency: Infinity,
 
     files: [
-      {pattern: 'spec/testAssets/*', watched: false, included: false, served: true, nocache: true},
       'bundle.js',
-      'spec/browser/**/*.js'
+      'spec/browser/**/*.js',
+      {pattern: 'spec/testAssets/*', watched: false, included: false, served: true, nocache: true},
     ],
 
     preprocessors: {
