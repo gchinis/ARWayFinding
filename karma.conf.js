@@ -22,7 +22,7 @@ module.exports = function(config) {
 
     files: [
       'bundle.js',
-      'spec/**/*.js'
+      'spec/browser/**/*.js'
     ],
 
     preprocessors: {

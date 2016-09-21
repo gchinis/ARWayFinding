@@ -1,11 +1,5 @@
 var request = require("request");
-var base_url = "http://localhost:8080/"
-
-// describe("A suite", () => {
-//   it("contains spec with an expectation", function() {
-//     expect(true).toBe(false);
-//   });
-// });
+var base_url = "http://localhost:8080/";
 
 describe("the server is started", ()=>{
   describe("GET /", ()=>{
