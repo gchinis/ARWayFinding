@@ -1,3 +1,5 @@
+var webpack = require("webpack");
+
 module.exports = {
   entry: "./app/main.js",
   output: {
@@ -15,5 +17,9 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.BannerPlugin('require("source-map-support").install();',
+                             { raw: true, entryOnly: false })
+  ]
 };
