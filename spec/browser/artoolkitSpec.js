@@ -1,19 +1,7 @@
-import "babel-polyfill";
-
 import { artoolkit, ARController, ARCameraParam } from "../../app/artoolkit.js";
+import { waitForEvent } from "./helpers.js";
 
 describe("jsartoolkit5 is running correctly", () => {
-  // Wait for an event to fire once on the given object.
-  const waitForEvent = (eventTarget, eventType) => {
-    return new Promise((resolve, reject) => {
-      let listener = (...args) => {
-        eventTarget.removeEventListener(eventType, listener);
-        resolve(...args);
-      };
-      eventTarget.addEventListener(eventType, listener);
-    });
-  };
-
   const loadCameraParam = (url) => {
     return new Promise((resolve, reject) => {
       let param = new ARCameraParam(url, () => {
