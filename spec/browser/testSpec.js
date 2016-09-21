@@ -23,10 +23,9 @@ describe("markers", () => {
   };
 
   it("recognizes a given marker", (done) => {
-    const marker = '/base/spec/testAssets/marker1.jpg';
     document.body.insertAdjacentHTML(
       'afterbegin',
-      '<img width="640" height="480" id="marker" src="/base/spec/testAssets/marker1.jpg"></img>'
+      '<img width="640" height="480" id="marker" src="/base/spec/testAssets/marker_3x3_id21.jpg"></img>'
     );
 
     let imageElem = document.getElementById('marker');
