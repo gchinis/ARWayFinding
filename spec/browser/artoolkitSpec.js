@@ -2,7 +2,7 @@ import "babel-polyfill";
 
 import { artoolkit, ARController, ARCameraParam } from "../../app/artoolkit.js";
 
-describe("markers", () => {
+describe("jsartoolkit5 is running correctly", () => {
   // Wait for an event to fire once on the given object.
   const waitForEvent = (eventTarget, eventType) => {
     return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ describe("markers", () => {
     });
   };
 
-  it("recognizes a given marker", (done) => {
+  it("recognizes a marker on an image", (done) => {
     document.body.insertAdjacentHTML(
       'afterbegin',
       '<img width="640" height="480" id="marker" src="/base/spec/testAssets/marker_3x3_id21.jpg"></img>'
