@@ -21,8 +21,10 @@ module.exports = function(config) {
     concurrency: Infinity,
 
     files: [
-      'bundle.js',
-      'spec/browser/**/*.js',
+      // Hack to import the Babel polyfill once for all tests.
+      'node_modules/babel-polyfill/browser.js',
+ 
+      'spec/browser/**/*Spec.js',
       {pattern: 'spec/testAssets/*', watched: false, included: false, served: true, nocache: true},
     ],
 
@@ -42,4 +44,4 @@ module.exports = function(config) {
       noInfo: true
     }
   });
-}
+};
