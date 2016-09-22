@@ -28,7 +28,7 @@ const main = () => {
       document.body.insertBefore(renderer.domElement, document.body.firstChild);
 
       // See /doc/patterns/Matrix code 3x3 (72dpi)/20.png
-      var markerRoot = arController.createThreeBarcodeMarker(20);
+      var markerRoot = arController.createThreeBarcodeMarker(4);
 
       var sphere = new THREE.Mesh(
         new THREE.SphereGeometry(0.5, 8, 8),
