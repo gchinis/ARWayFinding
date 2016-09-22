@@ -19,6 +19,18 @@ describe("Markers are recognized as part of arbitrary pictures", () => {
 
   const cameraParamUrl = '/base/spec/testAssets/camera_para.dat';
 
+  it("finds zero markers in a picture without markers", (done) => {
+    return makeMarkerDetector(cameraParamUrl).then((detectMarkers) => {
+      return loadImage('marker_no_markers.jpg').then((image) => {
+        let markers = detectMarkers(image);
+        expect(markers.length).toBe(0);
+        done();
+      });
+    }).catch(() => {
+      done.fail("makeMarkerDetector failed");
+    });
+  });
+
   it("finds one marker in a picture", (done) => {
     return makeMarkerDetector(cameraParamUrl).then((detectMarkers) => {
       return loadImage('marker_3x3_id20.jpg').then((image) => {
@@ -28,7 +40,7 @@ describe("Markers are recognized as part of arbitrary pictures", () => {
         done();
       });
     }).catch(() => {
-      done();
+      done.fail("makeMarkerDetector failed");
     });
   });
 
@@ -41,6 +53,14 @@ describe("Markers are recognized as part of arbitrary pictures", () => {
         expect(markers[0].id).toBe(2);
         done();
       });
+    }).catch(() => {
+      done.fail("makeMarkerDetector failed");
+    });
+  });
+
+  it("reports a failure if camera params can't be read", (done) => {
+    return makeMarkerDetector('/broken/url').then((detectMarkers) => {
+      done.fail("No failure reported");
     }).catch(() => {
       done();
     });
