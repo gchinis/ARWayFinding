@@ -9,14 +9,15 @@ const waitForEvent = (eventTarget, eventType) => {
   });
 };
 
-// Adds an image element to the DOM for the given image (name relative
-// to asset directory), and waits for the image to load. Returns a
-// promise that resolves to the image element.
+// Adds an image element to the DOM (inside a preexisting element with
+// id imageContainer) for the given image (name relative to asset
+// directory), and waits for the image to load. Returns a promise that
+// resolves to the image element.
 const baseImagePath = '/base/spec/testAssets/';
 const loadImage = (fileName) => {
-  document.body.insertAdjacentHTML(
+  document.getElementById('imageContainer').insertAdjacentHTML(
     'afterbegin',
-    '<img width="640" height="480" id="marker" src="/base/spec/testAssets/marker_3x3_id21.jpg"></img>'
+    `<img width="640" height="480" id="marker" src="/base/spec/testAssets/${fileName}"></img>`
   );
 
   let imageElem = document.getElementById('marker');
