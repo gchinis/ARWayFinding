@@ -24,7 +24,6 @@ const loadImage = (fileName) => {
   expect(imageElem).not.toBe(undefined);
 
   return waitForEvent(imageElem, 'load').then(() => {
-    console.log("loaded");
     return Promise.resolve(imageElem);
   });
 };
