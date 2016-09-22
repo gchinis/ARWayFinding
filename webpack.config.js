@@ -21,7 +21,7 @@ module.exports = {
       }
     ]
   },
-  devtool: 'source-map'
+  devtool: 'inline-source-map'
   // ,
   // plugins: [
   //   new webpack.BannerPlugin('require("source-map-support").install();',
