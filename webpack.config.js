@@ -2,7 +2,7 @@ var webpack = require("webpack");
 
 module.exports = {
   entry: [
-    "babel-polyfil",
+    "babel-polyfill",
     "./app/main.js"
   ],
   output: {
