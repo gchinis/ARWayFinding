@@ -1,8 +1,8 @@
 // Marker recognition functions.
 
-const makeMarkerDetector = () => {
+const makeMarkerDetector = (cameraParamUrl) => {
   // Dummy.
-  return Promise.resolve((image) => {return []});
+  return Promise.resolve((image) => {return [];});
 };
 
 
