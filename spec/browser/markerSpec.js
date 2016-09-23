@@ -1,5 +1,3 @@
-import "chai";
-
 import { makeMarkerDetector } from "../../app/marker.js";
 
 import { loadImage } from "./helpers.js";
