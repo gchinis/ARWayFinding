@@ -49,8 +49,8 @@ describe("Markers are recognized as part of arbitrary pictures", () => {
       return loadImage('marker_3x3_id1_id2.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).toBe(2);
-        expect(markers[0].id).toBe(1);
-        expect(markers[0].id).toBe(2);
+        expect(markers[0].id).toBe(19);
+        expect(markers[1].id).toBe(2);
         done();
       });
     }).catch(() => {
