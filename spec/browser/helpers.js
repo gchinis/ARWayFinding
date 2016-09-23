@@ -15,16 +15,20 @@ const waitForEvent = (eventTarget, eventType) => {
 // resolves to the image element.
 const baseImagePath = '/base/spec/testAssets/';
 const loadImage = (fileName) => {
-  document.getElementById('imageContainer').insertAdjacentHTML(
-    'afterbegin',
-    `<img width="640" height="480" id="marker" src="/base/spec/testAssets/${fileName}"></img>`
-  );
+  return new Promise((resolve, reject) => {
+    const imageElem = document.createElement('img');
+    imageElem.setAttribute('width', '640');
+    imageElem.setAttribute('height', '480');
 
-  let imageElem = document.getElementById('marker');
-  expect(imageElem).not.toBe(undefined);
+    let listener = () => {
+      imageElem.removeEventListener('load', listener);
+      resolve(imageElem);
+    };
+    imageElem.addEventListener('load', listener);
 
-  return waitForEvent(imageElem, 'load').then(() => {
-    return Promise.resolve(imageElem);
+    document.getElementById('imageContainer').appendChild(imageElem);
+
+    imageElem.setAttribute('src', `/base/spec/testAssets/${fileName}`);
   });
 };
 
