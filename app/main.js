@@ -43,6 +43,7 @@ const cameraLocationInScene = () => {
   var tMat = new THREE.Matrix4();
 
   var renderer = new THREE.WebGLRenderer();
+  renderer.setClearColor(0xffffff);
   var scene = new THREE.Scene();
 
   renderer.setSize(v.width, v.height);
