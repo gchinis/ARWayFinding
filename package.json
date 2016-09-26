@@ -26,7 +26,8 @@
     "script-loader": "^0.7.0",
     "source-map-support": "^0.4.2",
     "webpack": "^1.13.2",
-    "webpack-dev-server": "^1.15.1"
+    "webpack-dev-server": "^1.15.1",
+    "webrtc-adapter": "^2.0.3"
   },
   "dependencies": {
     "three": "^0.81.0"
