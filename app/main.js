@@ -39,12 +39,10 @@ const createAxes = (parentObject) => {
 };
 
 const cameraLocationInScene = () => {
-  var cMat = new THREE.Matrix4();
-  var tMat = new THREE.Matrix4();
-
   var video = document.getElementById('v');
 
   var renderer = new THREE.WebGLRenderer();
+	renderer.autoClear = false;
   renderer.setClearColor(0xffffff);
   var scene = new THREE.Scene();
 
@@ -54,6 +52,7 @@ const cameraLocationInScene = () => {
 
   // Create a camera and a marker root object for your Three.js scene.
   var camera = new THREE.Camera();
+  camera.matrixAutoUpdate = false;
   scene.add(camera);
 
   var light = new THREE.PointLight(0xffffff);
@@ -65,11 +64,6 @@ const cameraLocationInScene = () => {
 
   var markerRoot = new THREE.Object3D();
   markerRoot.matrixAutoUpdate = false;
-
-  markerRoot.wasVisible = false;
-  markerRoot.markerMatrix = new Float64Array(12);
-  markerRoot.matrixAutoUpdate = false;
-  camera.matrixAutoUpdate = false;
 
   createAxes(markerRoot);
 
@@ -138,7 +132,6 @@ const cameraLocationInScene = () => {
 	  arController.debugDraw();
 
 	  // Render the scene.
-	  renderer.autoClear = false;
 	  renderer.clear();
 	  renderer.render(scene, camera);
   }
