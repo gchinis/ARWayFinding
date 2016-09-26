@@ -42,11 +42,13 @@ const cameraLocationInScene = () => {
   var cMat = new THREE.Matrix4();
   var tMat = new THREE.Matrix4();
 
+  var video = document.getElementById('v');
+
   var renderer = new THREE.WebGLRenderer();
   renderer.setClearColor(0xffffff);
   var scene = new THREE.Scene();
 
-  renderer.setSize(v.width, v.height);
+  renderer.setSize(video.width, video.height);
 
   document.body.appendChild(renderer.domElement);
 
@@ -75,7 +77,6 @@ const cameraLocationInScene = () => {
   scene.add(markerRoot);
   var arController = null;
 
-  var video = document.getElementById('v');
   navigator.mediaDevices.getUserMedia({
     video: {
       facingMode: 'environment'
