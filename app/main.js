@@ -5,7 +5,7 @@ import { artoolkit, ARController, ARCameraParam } from "./artoolkit.js";
 const createAxes = (parentObject) => {
   var coneX = new THREE.Mesh(
     new THREE.ConeGeometry(0.1, 1),
-	  new THREE.MeshLambertMaterial({
+    new THREE.MeshLambertMaterial({
       color: 0xff0000,
       wireframe: false
     })
@@ -14,9 +14,9 @@ const createAxes = (parentObject) => {
   coneX.translateY(0.5);
 
   var coneY = new THREE.Mesh(
-	  //new THREE.BoxGeometry(1,1,1),
+    //new THREE.BoxGeometry(1,1,1),
     new THREE.ConeGeometry(0.1, 1),
-	  new THREE.MeshLambertMaterial({
+    new THREE.MeshLambertMaterial({
       color: 0x00ff00,
       wireframe: false
     })
@@ -25,7 +25,7 @@ const createAxes = (parentObject) => {
 
   var coneZ = new THREE.Mesh(
     new THREE.ConeGeometry(0.1, 1),
-	  new THREE.MeshLambertMaterial({
+    new THREE.MeshLambertMaterial({
       color: 0x0000ff,
       wireframe: false
     })
@@ -85,14 +85,14 @@ const cameraLocationInScene = () => {
 
   // On every frame do the following:
   function tick() {
-	  requestAnimationFrame(tick);
+    requestAnimationFrame(tick);
 
-	  if (!arController) {
-		  return;
-	  }
+    if (!arController) {
+      return;
+    }
 
-	  arController.detectMarker(video);
-	  var markerNum = arController.getMarkerNum();
+    arController.detectMarker(video);
+    var markerNum = arController.getMarkerNum();
     var markerInfo;
     for (var i = 0; i < markerNum; i++) {
 			markerInfo = arController.getMarker(i);
@@ -104,49 +104,49 @@ const cameraLocationInScene = () => {
       markerInfo = null;
     }
 
-	  if (markerInfo) {
+    if (markerInfo) {
 			if (markerInfo.dir !== markerInfo.dirPatt) {
-			  arController.setMarkerInfoDir(i, markerInfo.dirMatrix);
+        arController.setMarkerInfoDir(i, markerInfo.dirMatrix);
       }
 
-		  if (markerRoot.visible) {
-			  arController.getTransMatSquareCont(
+      if (markerRoot.visible) {
+        arController.getTransMatSquareCont(
           i,
           1,
           artoolkitTransform,
           artoolkitTransform);
-		  } else {
-			  arController.getTransMatSquare(
+      } else {
+        arController.getTransMatSquare(
           i /* Marker index */,
           1 /* Marker width */,
           artoolkitTransform);
-		  }
+      }
       arController.transMatToGLMat(artoolkitTransform, glTransform);
       markerRoot.matrix.elements.set(glTransform);
 
-		  markerRoot.visible = true;
-	  } else {
-		  markerRoot.visible = false;
-	  }
+      markerRoot.visible = true;
+    } else {
+      markerRoot.visible = false;
+    }
 
-	  arController.debugDraw();
+    arController.debugDraw();
 
-	  // Render the scene.
-	  renderer.clear();
-	  renderer.render(scene, camera);
+    // Render the scene.
+    renderer.clear();
+    renderer.render(scene, camera);
   }
 
   tick();
 
   var cameraParam = new ARCameraParam();
   cameraParam.onload = function() {
-	  arController = new ARController(320, 240, cameraParam);
+    arController = new ARController(320, 240, cameraParam);
     arController.setPatternDetectionMode(artoolkit.AR_MATRIX_CODE_DETECTION);
-	  arController.debugSetup();
+    arController.debugSetup();
 
-	  var camera_mat = arController.getCameraMatrix();
+    var camera_mat = arController.getCameraMatrix();
 
-	  camera.projectionMatrix.elements.set(camera_mat);
+    camera.projectionMatrix.elements.set(camera_mat);
 
   };
   cameraParam.load('3dparty/jsartoolkit5/Data/camera_para.dat');
