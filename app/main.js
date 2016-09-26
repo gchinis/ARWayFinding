@@ -155,7 +155,7 @@ const cameraLocationInScene = () => {
 	  camera.projectionMatrix.elements.set(camera_mat);
 
   };
-  cameraParam.load('camera_para.dat');
+  cameraParam.load('3dparty/jsartoolkit5/Data/camera_para.dat');
 };
 
 
