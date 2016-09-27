@@ -1,5 +1,6 @@
 import "webrtc-adapter";
 const THREE = require('three');
+const TrackballControls = require('three-trackballcontrols');
 import { artoolkit, ARController, ARCameraParam } from "./artoolkit.js";
 
 const createAxes = () => {
@@ -106,7 +107,7 @@ const cameraLocationInScene = () => {
   camera.lookAt(new THREE.Vector3(0, 1.5, 0));
   scene.add(camera);
 
-
+  var controls = new TrackballControls(camera, renderer.domElement);
   var arController = null;
 
   navigator.mediaDevices.getUserMedia({
@@ -169,6 +170,7 @@ const cameraLocationInScene = () => {
 
     arController.debugDraw();
 
+    controls.update();
     // Render the scene.
     renderer.clear();
     renderer.render(scene, camera);

@@ -30,6 +30,7 @@
     "webrtc-adapter": "^2.0.3"
   },
   "dependencies": {
-    "three": "^0.81.0"
+    "three": "^0.81.0",
+    "three-trackballcontrols": "^0.0.5"
   }
 }
