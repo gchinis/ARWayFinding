@@ -3,6 +3,7 @@ var webpack = require("webpack");
 module.exports = {
   entry: [
     "babel-polyfill",
+    "./app/convui.js",
     "./app/3dsandbox.js"
   ],
   output: {
@@ -16,7 +17,7 @@ module.exports = {
         exclude: /(node_modules|bower_components|3dparty)/,
         loader: 'babel',
         query: {
-          presets: ['es2015']
+          presets: ['es2015', 'react']
         }
       }
     ]
