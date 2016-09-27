@@ -265,6 +265,6 @@ const objectOnMarker = () => {
   });
 };
 
-
-//objectOnMarker();
-cameraLocationInScene();
+// TODO: Remove this when we integrate UI and 3D into a single entry point.
+window.objectOnMarker = objectOnMarker;
+window.cameraLocationInScene = cameraLocationInScene;
