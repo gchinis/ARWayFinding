@@ -3,7 +3,7 @@ var webpack = require("webpack");
 module.exports = {
   entry: [
     "babel-polyfill",
-    "./app/main.js"
+    "./app/3dsandbox.js"
   ],
   output: {
     path: __dirname + '/app',
