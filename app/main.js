@@ -2,7 +2,9 @@ import "webrtc-adapter";
 const THREE = require('three');
 import { artoolkit, ARController, ARCameraParam } from "./artoolkit.js";
 
-const createAxes = (parentObject) => {
+const createAxes = () => {
+  var axes = new THREE.Object3D();
+
   var coneX = new THREE.Mesh(
     new THREE.ConeGeometry(0.1, 1),
     new THREE.MeshLambertMaterial({
@@ -10,11 +12,10 @@ const createAxes = (parentObject) => {
       wireframe: false
     })
   );
-  coneX.rotateZ(Math.PI / 2);
+  coneX.rotateZ(-Math.PI / 2);
   coneX.translateY(0.5);
 
   var coneY = new THREE.Mesh(
-    //new THREE.BoxGeometry(1,1,1),
     new THREE.ConeGeometry(0.1, 1),
     new THREE.MeshLambertMaterial({
       color: 0x00ff00,
@@ -33,9 +34,11 @@ const createAxes = (parentObject) => {
   coneZ.rotateX(Math.PI / 2);
   coneZ.translateY(0.5);
 
-  parentObject.add(coneX);
-  parentObject.add(coneY);
-  parentObject.add(coneZ);
+  axes.add(coneX);
+  axes.add(coneY);
+  axes.add(coneZ);
+
+  return axes;
 };
 
 const cameraLocationInScene = () => {
@@ -46,29 +49,64 @@ const cameraLocationInScene = () => {
   renderer.setClearColor(0xffffff);
   var scene = new THREE.Scene();
 
+  var axes = createAxes();
+  axes.scale.set(1, 1, 1);
+  scene.add(axes);
+
   renderer.setSize(video.width, video.height);
 
   document.body.appendChild(renderer.domElement);
 
-  // Create a camera and a marker root object for your Three.js scene.
-  var camera = new THREE.Camera();
-  camera.matrixAutoUpdate = false;
+  var light = new THREE.PointLight(0xffffff);
+  //light.position.set(30, 50, 50);
+  light.position.set(0, 2, 0);
+  scene.add(light);
+  light = new THREE.AmbientLight( 0x404040 ); // soft white light
+  scene.add( light );
+  //light = new THREE.PointLight(0xffffff);
+  //light.position.set(-400, -500, -100);
+  //scene.add(light);
+
+  var room = new THREE.Object3D();
+  scene.add(room);
+
+  var walls = new THREE.Mesh(
+    new THREE.BoxGeometry(4, 2.4, 6, 5, 5, 5),
+    //new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshLambertMaterial({
+      color: 0x00ffff,
+      wireframe: false,
+      side: THREE.DoubleSide
+    })
+  );
+  walls.position.y = 1.15;
+  room.add(walls);
+
+  var ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(15, 15, 8, 8),
+    new THREE.MeshLambertMaterial({
+      color: 0xcfcfcf,
+      wireframe: false,
+      side: THREE.DoubleSide
+    })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  scene.add(ground);
+
+  var marker = new THREE.Object3D();
+  marker.rotation.x = -Math.PI / 2;
+  //createAxes(marker);
+  room.add(marker);
+
+  var camera = new THREE.PerspectiveCamera(40, 4/3, 0.1, 1000);
+  //var camera = new THREE.Camera();
+  //camera.matrixAutoUpdate = false;
+  //camera.position.set(10, 6, 10);
+  camera.position.set(2, 1.5, 3);
+  camera.lookAt(new THREE.Vector3(0, 1.5, 0));
   scene.add(camera);
 
-  var light = new THREE.PointLight(0xffffff);
-  light.position.set(400, 500, 100);
-  scene.add(light);
-  light = new THREE.PointLight(0xffffff);
-  light.position.set(-400, -500, -100);
-  scene.add(light);
 
-  var markerRoot = new THREE.Object3D();
-  markerRoot.matrixAutoUpdate = false;
-
-  createAxes(markerRoot);
-
-  // Add the marker root to your scene.
-  scene.add(markerRoot);
   var arController = null;
 
   navigator.mediaDevices.getUserMedia({
@@ -105,28 +143,28 @@ const cameraLocationInScene = () => {
     }
 
     if (markerInfo) {
-			if (markerInfo.dir !== markerInfo.dirPatt) {
+      if (markerInfo.dir !== markerInfo.dirPatt) {
         arController.setMarkerInfoDir(i, markerInfo.dirMatrix);
       }
 
-      if (markerRoot.visible) {
+      if (marker.visible) {
         arController.getTransMatSquareCont(
           i,
-          1,
+          0.07,
           artoolkitTransform,
           artoolkitTransform);
       } else {
         arController.getTransMatSquare(
-          i /* Marker index */,
-          1 /* Marker width */,
+          i,
+          0.07,
           artoolkitTransform);
       }
       arController.transMatToGLMat(artoolkitTransform, glTransform);
-      markerRoot.matrix.elements.set(glTransform);
+      //marker.matrix.elements.set(glTransform);
 
-      markerRoot.visible = true;
+      marker.visible = true;
     } else {
-      markerRoot.visible = false;
+      marker.visible = false;
     }
 
     arController.debugDraw();
@@ -145,9 +183,13 @@ const cameraLocationInScene = () => {
     arController.debugSetup();
 
     var camera_mat = arController.getCameraMatrix();
-
-    camera.projectionMatrix.elements.set(camera_mat);
-
+    //camera.projectionMatrix.elements.set(camera_mat);
+    //camera.projectionMatrix.multiply(new THREE.Matrix4().makeScale(1, 1, -1));
+    console.log(new THREE.Vector3().set(0, 0, -1).unproject(camera).z,
+                new THREE.Vector3().set(0, 0, 1).unproject(camera).z);
+    //[camera.position.x, camera.position.y, camera.position.z] = [10, 10, 10];
+    //camera.rotation.x = -Math.PI / 2;
+    //camera.lookAt(new THREE.Vector3(0, 0, 0));
   };
   cameraParam.load('3dparty/jsartoolkit5/Data/camera_para.dat');
 };
@@ -197,7 +239,7 @@ const objectOnMarker = () => {
       // sphere.position.z = 0.5;
       // markerRoot.add(sphere);
 
-      createAxes(markerRoot);
+      markerRoot.add(createAxes());
       arScene.scene.add(markerRoot);
 
       var rotationV = 0;
