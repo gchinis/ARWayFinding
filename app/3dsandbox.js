@@ -72,7 +72,7 @@ const cameraLocationInScene = () => {
   scene.add(room);
 
   var walls = new THREE.Mesh(
-    new THREE.BoxGeometry(4, 2.4, 6, 5, 5, 5),
+    new THREE.BoxGeometry(10, 10, 10, 5, 5, 5),
     //new THREE.BoxGeometry(1, 1, 1),
     new THREE.MeshLambertMaterial({
       color: 0x00ffff,
@@ -80,7 +80,6 @@ const cameraLocationInScene = () => {
       side: THREE.DoubleSide
     })
   );
-  walls.position.y = 1.15;
   room.add(walls);
 
   var ground = new THREE.Mesh(
@@ -91,6 +90,7 @@ const cameraLocationInScene = () => {
       side: THREE.DoubleSide
     })
   );
+  ground.position.y = -5;
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
 
@@ -98,6 +98,17 @@ const cameraLocationInScene = () => {
   marker.rotation.x = -Math.PI / 2;
   //createAxes(marker);
   room.add(marker);
+
+  var pseudoMarker = new THREE.Mesh(
+    new THREE.PlaneGeometry(2, 2, 1, 1),
+    new THREE.MeshLambertMaterial({
+      color: 0xcf2828,
+      wireframe: false,
+      side: THREE.DoubleSide
+    })
+  );
+  pseudoMarker.rotation.y = -Math.PI / 2;
+  scene.add(pseudoMarker);
 
   var camera = new THREE.PerspectiveCamera(40, 4/3, 0.1, 1000);
   //var camera = new THREE.Camera();
