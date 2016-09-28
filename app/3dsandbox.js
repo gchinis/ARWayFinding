@@ -72,7 +72,7 @@ const cameraLocationInScene = () => {
   scene.add(room);
 
   var walls = new THREE.Mesh(
-    new THREE.BoxGeometry(10, 10, 10, 5, 5, 5),
+    new THREE.BoxGeometry(4, 2.5, 6, 5, 5, 5),
     //new THREE.BoxGeometry(1, 1, 1),
     new THREE.MeshLambertMaterial({
       color: 0x00ffff,
@@ -80,6 +80,7 @@ const cameraLocationInScene = () => {
       side: THREE.DoubleSide
     })
   );
+  walls.position.y = 1.2;
   room.add(walls);
 
   var ground = new THREE.Mesh(
@@ -90,35 +91,51 @@ const cameraLocationInScene = () => {
       side: THREE.DoubleSide
     })
   );
-  ground.position.y = -5;
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
 
-  var marker = new THREE.Object3D();
-  marker.rotation.x = -Math.PI / 2;
-  //createAxes(marker);
-  room.add(marker);
-
-  var pseudoMarker = new THREE.Mesh(
-    new THREE.PlaneGeometry(2, 2, 1, 1),
+  var pseudoMarker = new THREE.Object3D();
+  var markerSurface = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.1, 0.1, 1, 1),
     new THREE.MeshLambertMaterial({
       color: 0xcf2828,
-      wireframe: false,
-      side: THREE.DoubleSide
+      wireframe: false
     })
   );
-  pseudoMarker.rotation.y = -Math.PI / 2;
-  scene.add(pseudoMarker);
+  var markerAxes = createAxes();
+  markerAxes.scale.set(0.2, 0.2, 0.2);
+  pseudoMarker.add(markerAxes);
+  pseudoMarker.add(markerSurface);
+  pseudoMarker.rotation.y = Math.PI / 2;
+  pseudoMarker.position.set(-1.98, 1.5, 0);
+  room.add(pseudoMarker);
 
-  var camera = new THREE.PerspectiveCamera(40, 4/3, 0.1, 1000);
+  var pseudoCamera = new THREE.Mesh(
+    new THREE.ConeGeometry(0.1, 1),
+    new THREE.MeshLambertMaterial({
+      color: 0xff00ff,
+      wireframe: false
+    })
+  );
+  pseudoCamera.matrixAutoUpdate = false;
+  pseudoCamera.visible = false;
+  pseudoMarker.add(pseudoCamera);
+
+  var camera = new THREE.PerspectiveCamera(75, 4/3, 0.1, 1000);
   //var camera = new THREE.Camera();
   //camera.matrixAutoUpdate = false;
   //camera.position.set(10, 6, 10);
-  camera.position.set(2, 1.5, 3);
-  camera.lookAt(new THREE.Vector3(0, 1.5, 0));
+  camera.position.set(-0.4, 1.5, 0);
   scene.add(camera);
 
   var controls = new TrackballControls(camera, renderer.domElement);
+  controls.target.set(-1.2, 1.5, 0);
+  controls.rotateSpeed = 0.7;
+  controls.zoomSpeed = 0.7;
+  controls.panSpeed = 0.4;
+  controls.staticMoving = true;
+  controls.dynamicDampingFactor = 0.3;
+
   var arController = null;
 
   navigator.mediaDevices.getUserMedia({
@@ -145,7 +162,7 @@ const cameraLocationInScene = () => {
     var markerNum = arController.getMarkerNum();
     var markerInfo;
     for (var i = 0; i < markerNum; i++) {
-			markerInfo = arController.getMarker(i);
+      markerInfo = arController.getMarker(i);
       if (markerInfo.id === 2) {
         break;
       }
@@ -159,7 +176,7 @@ const cameraLocationInScene = () => {
         arController.setMarkerInfoDir(i, markerInfo.dirMatrix);
       }
 
-      if (marker.visible) {
+      if (pseudoCamera.visible) {
         arController.getTransMatSquareCont(
           i,
           1,
@@ -171,17 +188,26 @@ const cameraLocationInScene = () => {
           1,
           artoolkitTransform);
       }
+      //console.log(artoolkitTransform);
       arController.transMatToGLMat(artoolkitTransform, glTransform);
-      //marker.matrix.elements.set(glTransform);
 
-      marker.visible = true;
+      //pseudoCamera.matrix.elements.set(glTransform);
+      var markerTransform = new THREE.Matrix4().fromArray(glTransform);
+      var cameraTransform = new THREE.Matrix4().getInverse(markerTransform);
+      //cameraTransform.premultiply(new THREE.Matrix4().makeScale(0.07, 0.07, 0.07));
+      //pseudoMarker.matrix.clone().multiply(cameraTransform);
+      pseudoCamera.matrix.copy(cameraTransform);
+      //console.log(new THREE.Vector4(0, 0, 0, 1).applyMatrix4(cameraTransform));
+
+      pseudoCamera.visible = true;
     } else {
-      marker.visible = false;
+      pseudoCamera.visible = false;
     }
 
     arController.debugDraw();
 
     controls.update();
+
     // Render the scene.
     renderer.clear();
     renderer.render(scene, camera);
