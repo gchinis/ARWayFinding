@@ -7,7 +7,7 @@
   "scripts": {
     "test": "./karma start --single-run",
     "start": "./webpack-dev-server",
-    "postinstall": "./webpack --devtool cheap-module-source-map -p --progress --colors"
+    "postinstall": "./webpack -p --progress --colors"
   },
   "author": "",
   "license": "ISC",
