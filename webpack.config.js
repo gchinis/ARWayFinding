@@ -30,7 +30,7 @@ module.exports = {
       { context: 'app', from: '*.html' },
       { context: 'app', from: '*.css' },
       { context: 'app', from: 'assets', to: 'assets' },
-
+      { context: 'app/configuration', from: 'camera', to: 'camera' },
     ])
   ]
 };

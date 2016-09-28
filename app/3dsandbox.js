@@ -228,14 +228,14 @@ const cameraLocationInScene = () => {
     var cameraMat = arController.getCameraMatrix();
     camera.projectionMatrix.elements.set(cameraMat);
   };
-  cameraParam.load('3dparty/jsartoolkit5/Data/camera_para.dat');
+  cameraParam.load('camera/camera_para.dat');
 };
 
 
 const objectOnMarker = () => {
 	ARController.getUserMediaThreeScene({
     maxARVideoSize: 320,
-    cameraParam: '3dparty/jsartoolkit5/Data/camera_para-iPhone 5 rear 640x480 1.0m.dat',
+    cameraParam: 'camera/camera_para-iPhone 5 rear 640x480 1.0m.dat',
     onSuccess: function(arScene, arController, arCamera) {
       document.body.className = arController.orientation;
 
