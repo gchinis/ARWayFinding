@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "./karma start --single-run",
-    "start": "./webpack-dev-server"
+    "start": "./webpack-dev-server",
+    "postinstall": "./webpack --devtool cheap-module-source-map -p --progress --colors"
   },
   "author": "",
   "license": "ISC",
