@@ -50,10 +50,6 @@ const cameraLocationInScene = () => {
   renderer.setClearColor(0xffffff);
   var scene = new THREE.Scene();
 
-  var axes = createAxes();
-  axes.scale.set(1, 1, 1);
-  scene.add(axes);
-
   renderer.setSize(video.width, video.height);
 
   document.body.appendChild(renderer.domElement);
@@ -76,7 +72,7 @@ const cameraLocationInScene = () => {
     //new THREE.BoxGeometry(1, 1, 1),
     new THREE.MeshLambertMaterial({
       color: 0x00ffff,
-      wireframe: true,
+      wireframe: false,
       side: THREE.DoubleSide
     })
   );
@@ -102,24 +98,19 @@ const cameraLocationInScene = () => {
       wireframe: false
     })
   );
-  var markerAxes = createAxes();
-  markerAxes.scale.set(0.2, 0.2, 0.2);
-  pseudoMarker.add(markerAxes);
   pseudoMarker.add(markerSurface);
   pseudoMarker.rotation.y = Math.PI / 2;
   pseudoMarker.position.set(-1.98, 1.5, 0);
   room.add(pseudoMarker);
 
-  var pseudoCamera = new THREE.Mesh(
-    new THREE.SphereGeometry(0.2, 10),
-    new THREE.MeshLambertMaterial({
-      color: 0xff00ff,
-      wireframe: false
-    })
-  );
+  var pseudoCamera = new THREE.Object3D();
   pseudoCamera.matrixAutoUpdate = false;
   pseudoCamera.visible = false;
   pseudoMarker.add(pseudoCamera);
+
+  var cameraAxes = createAxes();
+  cameraAxes.scale.set(2, 2, 2);
+  pseudoCamera.add(cameraAxes);
 
   var camera = new THREE.PerspectiveCamera(75, 4/3, 0.1, 1000);
   //var camera = new THREE.Camera();
