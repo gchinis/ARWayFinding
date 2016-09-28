@@ -1,13 +1,32 @@
-html {
+body {
     background-color: #2e4051;
     color: #FFFFFF;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.container {
+  max-width: 350px;
+  max-height: 500px;
+  margin: 0 auto;
+}
+
+.help {
+  position: absolute;
+  bottom: 0;
+}
+
+.help img {
+  width: 350px;
 }
 
 .robot {
     width: 200px;
-    height: 200px;
-    overflow: hidden;
-    margin: 0 auto;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.robot img {
+  width: 50%;
 }
 
 
@@ -18,19 +37,28 @@ html {
     letter-spacing: 2px;
 }
 
-.typing-indicator {
+#chats ul {
+  list-style-type: none;
+}
+
+#chats ul li {
+  margin-top: 10px;
+}
+
+.chat-bubble {
     background-color: #FFFFFF;
     width: auto;
     border-radius: 10px;
-    padding: 20px;
+    padding: 15px;
     display: table;
-    margin: 0 auto;
     position: relative;
+    color: black;
+    font-size: 0.8em;
 }
 
 .typing-indicator span {
-    height: 15px;
-    width: 15px;
+    height: 10px;
+    width: 10px;
     float: left;
     margin: 0 1px;
     background-color: #9E9EA1;
@@ -55,4 +83,8 @@ html {
     50% {
         opacity: 1;
     }
+}
+
+.hidden {
+    display: none;
 }

@@ -2,22 +2,36 @@
   <head>
     <title>Robot Guiding</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="Convui.css">
+
+<link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+<script src="//fb.me/react-0.13.1.js"></script>
+  <meta charset="utf-8">
+
     <style>
     </style>
   </head>
   <body>
-    <div class="title"><b>ROBB</b> THE VIRTUAL ROBOT</div>
-    <div class="robot">
-      <img src="assets/noun_529600_cc.svg" />
-    </div>
-    <div class="typing-indicator">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
+    <div class="container">
+      <div class="title"><b>ROBB</b> THE VIRTUAL ROBOT</div>
 
+      <div class="robot">
+        <img src="assets/robot.png" />
+      </div>
 
+      <div id="chats">
+        <div id="chat-list"></div>
+      </div>
+
+      <div class="help">
+        <img src="assets/call-store-assistant.png" />
+      </div>
+    </div>
+    <script src="bundle.js"></script>
 
   </body>
 </html>
