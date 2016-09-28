@@ -162,13 +162,13 @@ const cameraLocationInScene = () => {
       if (marker.visible) {
         arController.getTransMatSquareCont(
           i,
-          0.07,
+          1,
           artoolkitTransform,
           artoolkitTransform);
       } else {
         arController.getTransMatSquare(
           i,
-          0.07,
+          1,
           artoolkitTransform);
       }
       arController.transMatToGLMat(artoolkitTransform, glTransform);
