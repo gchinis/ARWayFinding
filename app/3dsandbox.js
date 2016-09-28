@@ -76,7 +76,7 @@ const cameraLocationInScene = () => {
     //new THREE.BoxGeometry(1, 1, 1),
     new THREE.MeshLambertMaterial({
       color: 0x00ffff,
-      wireframe: false,
+      wireframe: true,
       side: THREE.DoubleSide
     })
   );
@@ -111,7 +111,7 @@ const cameraLocationInScene = () => {
   room.add(pseudoMarker);
 
   var pseudoCamera = new THREE.Mesh(
-    new THREE.ConeGeometry(0.1, 1),
+    new THREE.SphereGeometry(0.2, 10),
     new THREE.MeshLambertMaterial({
       color: 0xff00ff,
       wireframe: false
@@ -194,7 +194,7 @@ const cameraLocationInScene = () => {
       //pseudoCamera.matrix.elements.set(glTransform);
       var markerTransform = new THREE.Matrix4().fromArray(glTransform);
       var cameraTransform = new THREE.Matrix4().getInverse(markerTransform);
-      //cameraTransform.premultiply(new THREE.Matrix4().makeScale(0.07, 0.07, 0.07));
+      cameraTransform.premultiply(new THREE.Matrix4().makeScale(0.08, 0.08, 0.08));
       //pseudoMarker.matrix.clone().multiply(cameraTransform);
       pseudoCamera.matrix.copy(cameraTransform);
       //console.log(new THREE.Vector4(0, 0, 0, 1).applyMatrix4(cameraTransform));
@@ -223,7 +223,7 @@ const cameraLocationInScene = () => {
 
     var camera_mat = arController.getCameraMatrix();
     //camera.projectionMatrix.elements.set(camera_mat);
-    //camera.projectionMatrix.multiply(new THREE.Matrix4().makeScale(1, 1, -1));
+    camera.projectionMatrix.multiply(new THREE.Matrix4().makeScale(0.1, 0.1, 0.1));
     console.log(new THREE.Vector3().set(0, 0, -1).unproject(camera).z,
                 new THREE.Vector3().set(0, 0, 1).unproject(camera).z);
     //[camera.position.x, camera.position.y, camera.position.z] = [10, 10, 10];
