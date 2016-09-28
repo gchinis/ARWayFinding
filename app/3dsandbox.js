@@ -32,7 +32,7 @@ const createAxes = () => {
       wireframe: false
     })
   );
-  coneZ.rotateX(Math.PI / 2);
+  coneZ.rotateX(-Math.PI / 2);
   coneZ.translateY(0.5);
 
   axes.add(coneX);
@@ -46,13 +46,18 @@ const cameraLocationInScene = () => {
   var video = document.getElementById('v');
 
   var renderer = new THREE.WebGLRenderer();
-	renderer.autoClear = false;
+  renderer.autoClear = false;
   renderer.setClearColor(0xffffff);
-  var scene = new THREE.Scene();
-
   renderer.setSize(video.width, video.height);
-
   document.body.appendChild(renderer.domElement);
+
+  var debugRenderer = new THREE.WebGLRenderer();
+  debugRenderer.autoClear = false;
+  debugRenderer.setClearColor(0xffffff);
+  debugRenderer.setSize(video.width, video.height);
+  document.body.appendChild(debugRenderer.domElement);
+
+  var scene = new THREE.Scene();
 
   var light = new THREE.PointLight(0xffffff);
   //light.position.set(30, 50, 50);
@@ -92,7 +97,7 @@ const cameraLocationInScene = () => {
 
   var pseudoMarker = new THREE.Object3D();
   var markerSurface = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.1, 0.1, 1, 1),
+    new THREE.PlaneGeometry(0.08, 0.08, 0.8, 1),
     new THREE.MeshLambertMaterial({
       color: 0xcf2828,
       wireframe: false
@@ -103,29 +108,33 @@ const cameraLocationInScene = () => {
   pseudoMarker.position.set(-1.98, 1.5, 0);
   room.add(pseudoMarker);
 
-  var pseudoCamera = new THREE.Object3D();
-  pseudoCamera.matrixAutoUpdate = false;
-  pseudoCamera.visible = false;
-  pseudoMarker.add(pseudoCamera);
+  var cameraPoseIndicator = new THREE.Object3D();
+  cameraPoseIndicator.matrixAutoUpdate = false;
+  cameraPoseIndicator.visible = false;
+  scene.add(cameraPoseIndicator);
+  //pseudoMarker.add(cameraPoseIndicator);
 
   var cameraAxes = createAxes();
-  cameraAxes.scale.set(2, 2, 2);
-  pseudoCamera.add(cameraAxes);
+  cameraAxes.scale.set(0.5, 0.5, 0.5);
+  //cameraPoseIndicator.add(cameraAxes);
 
-  var camera = new THREE.PerspectiveCamera(75, 4/3, 0.1, 1000);
-  //var camera = new THREE.Camera();
-  //camera.matrixAutoUpdate = false;
-  //camera.position.set(10, 6, 10);
-  camera.position.set(-0.4, 1.5, 0);
-  scene.add(camera);
+  var debugCamera = new THREE.PerspectiveCamera(75, 4/3, 0.1, 1000);
+  debugCamera.position.set(-0.4, 1.5, 0);
+  scene.add(debugCamera);
 
-  var controls = new TrackballControls(camera, renderer.domElement);
+  var controls = new TrackballControls(debugCamera, debugRenderer.domElement);
   controls.target.set(-1.2, 1.5, 0);
   controls.rotateSpeed = 0.7;
   controls.zoomSpeed = 0.7;
   controls.panSpeed = 0.4;
   controls.staticMoving = true;
   controls.dynamicDampingFactor = 0.3;
+
+  //var camera = new THREE.PerspectiveCamera(45, 4/3, 0.1, 1000);
+  var camera = new THREE.Camera();
+  camera.matrixAutoUpdate = false;
+  scene.add(camera);
+
 
   var arController = null;
 
@@ -167,7 +176,7 @@ const cameraLocationInScene = () => {
         arController.setMarkerInfoDir(i, markerInfo.dirMatrix);
       }
 
-      if (pseudoCamera.visible) {
+      if (cameraPoseIndicator.visible) {
         arController.getTransMatSquareCont(
           i,
           1,
@@ -179,20 +188,22 @@ const cameraLocationInScene = () => {
           1,
           artoolkitTransform);
       }
-      //console.log(artoolkitTransform);
       arController.transMatToGLMat(artoolkitTransform, glTransform);
 
-      //pseudoCamera.matrix.elements.set(glTransform);
       var markerTransform = new THREE.Matrix4().fromArray(glTransform);
       var cameraTransform = new THREE.Matrix4().getInverse(markerTransform);
+
       cameraTransform.premultiply(new THREE.Matrix4().makeScale(0.08, 0.08, 0.08));
-      //pseudoMarker.matrix.clone().multiply(cameraTransform);
-      pseudoCamera.matrix.copy(cameraTransform);
+      cameraTransform.premultiply(pseudoMarker.matrixWorld);
+
+      camera.matrix.copy(cameraTransform);
+      cameraPoseIndicator.matrix.copy(cameraTransform);
+
       //console.log(new THREE.Vector4(0, 0, 0, 1).applyMatrix4(cameraTransform));
 
-      pseudoCamera.visible = true;
+      cameraPoseIndicator.visible = true;
     } else {
-      pseudoCamera.visible = false;
+      cameraPoseIndicator.visible = false;
     }
 
     arController.debugDraw();
@@ -202,6 +213,8 @@ const cameraLocationInScene = () => {
     // Render the scene.
     renderer.clear();
     renderer.render(scene, camera);
+    debugRenderer.clear();
+    debugRenderer.render(scene, debugCamera);
   }
 
   tick();
@@ -210,16 +223,10 @@ const cameraLocationInScene = () => {
   cameraParam.onload = function() {
     arController = new ARController(320, 240, cameraParam);
     arController.setPatternDetectionMode(artoolkit.AR_MATRIX_CODE_DETECTION);
-    arController.debugSetup();
+    //arController.debugSetup();
 
-    var camera_mat = arController.getCameraMatrix();
-    //camera.projectionMatrix.elements.set(camera_mat);
-    camera.projectionMatrix.multiply(new THREE.Matrix4().makeScale(0.1, 0.1, 0.1));
-    console.log(new THREE.Vector3().set(0, 0, -1).unproject(camera).z,
-                new THREE.Vector3().set(0, 0, 1).unproject(camera).z);
-    //[camera.position.x, camera.position.y, camera.position.z] = [10, 10, 10];
-    //camera.rotation.x = -Math.PI / 2;
-    //camera.lookAt(new THREE.Vector3(0, 0, 0));
+    var cameraMat = arController.getCameraMatrix();
+    camera.projectionMatrix.elements.set(cameraMat);
   };
   cameraParam.load('3dparty/jsartoolkit5/Data/camera_para.dat');
 };
