@@ -32,7 +32,7 @@ const createAxes = () => {
       wireframe: false
     })
   );
-  coneZ.rotateX(-Math.PI / 2);
+  coneZ.rotateX(Math.PI / 2);
   coneZ.translateY(0.5);
 
   axes.add(coneX);
@@ -40,6 +40,18 @@ const createAxes = () => {
   axes.add(coneZ);
 
   return axes;
+};
+
+const addLighting = (scene) => {
+  var light = new THREE.PointLight(0xffffff);
+  //light.position.set(30, 50, 50);
+  light.position.set(0, 2, 0);
+  scene.add(light);
+  light = new THREE.AmbientLight( 0x404040 ); // soft white light
+  scene.add( light );
+  //light = new THREE.PointLight(0xffffff);
+  //light.position.set(-400, -500, -100);
+  //scene.add(light);
 };
 
 const cameraLocationInScene = () => {
@@ -58,16 +70,10 @@ const cameraLocationInScene = () => {
   document.body.appendChild(debugRenderer.domElement);
 
   var scene = new THREE.Scene();
+  var debugScene = new THREE.Scene();
 
-  var light = new THREE.PointLight(0xffffff);
-  //light.position.set(30, 50, 50);
-  light.position.set(0, 2, 0);
-  scene.add(light);
-  light = new THREE.AmbientLight( 0x404040 ); // soft white light
-  scene.add( light );
-  //light = new THREE.PointLight(0xffffff);
-  //light.position.set(-400, -500, -100);
-  //scene.add(light);
+  addLighting(scene);
+  addLighting(debugScene);
 
   var room = new THREE.Object3D();
   scene.add(room);
@@ -111,12 +117,11 @@ const cameraLocationInScene = () => {
   var cameraPoseIndicator = new THREE.Object3D();
   cameraPoseIndicator.matrixAutoUpdate = false;
   cameraPoseIndicator.visible = false;
-  scene.add(cameraPoseIndicator);
-  //pseudoMarker.add(cameraPoseIndicator);
+  debugScene.add(cameraPoseIndicator);
 
   var cameraAxes = createAxes();
-  cameraAxes.scale.set(0.5, 0.5, 0.5);
-  //cameraPoseIndicator.add(cameraAxes);
+  cameraAxes.scale.set(2, 2, 2);
+  cameraPoseIndicator.add(cameraAxes);
 
   var debugCamera = new THREE.PerspectiveCamera(75, 4/3, 0.1, 1000);
   debugCamera.position.set(-0.4, 1.5, 0);
@@ -210,11 +215,12 @@ const cameraLocationInScene = () => {
 
     controls.update();
 
-    // Render the scene.
     renderer.clear();
     renderer.render(scene, camera);
+
     debugRenderer.clear();
     debugRenderer.render(scene, debugCamera);
+    debugRenderer.render(debugScene, debugCamera);
   }
 
   tick();
