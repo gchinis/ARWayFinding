@@ -1,4 +1,5 @@
 var webpack = require("webpack");
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: [
@@ -7,7 +8,7 @@ module.exports = {
     "./app/3dsandbox.js"
   ],
   output: {
-    path: __dirname + '/app',
+    path: __dirname + '/public',
     filename: "bundle.js"
   },
   module: {
@@ -22,10 +23,11 @@ module.exports = {
       }
     ]
   },
-  devtool: 'cheap-module-source-map'
-  // ,
-  // plugins: [
-  //   new webpack.BannerPlugin('require("source-map-support").install();',
-  //                            { raw: true, entryOnly: false })
-  // ]
+  devtool: 'cheap-module-source-map',
+
+  plugins: [
+    new CopyWebpackPlugin([
+      { context: 'app', from: '*.html' },
+    ])
+  ]
 };

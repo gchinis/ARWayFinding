@@ -3,3 +3,5 @@
 /app/bundle.js
 **/.DS_Store
 .idea/
+
+/public
