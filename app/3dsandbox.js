@@ -106,7 +106,7 @@ const cameraLocationInScene = () => {
   var pseudoCamera = new THREE.Object3D();
   pseudoCamera.matrixAutoUpdate = false;
   pseudoCamera.visible = false;
-  pseudoMarker.add(pseudoCamera);
+  scene.add(pseudoCamera);
 
   var cameraAxes = createAxes();
   cameraAxes.scale.set(2, 2, 2);
@@ -182,11 +182,10 @@ const cameraLocationInScene = () => {
       //console.log(artoolkitTransform);
       arController.transMatToGLMat(artoolkitTransform, glTransform);
 
-      //pseudoCamera.matrix.elements.set(glTransform);
       var markerTransform = new THREE.Matrix4().fromArray(glTransform);
       var cameraTransform = new THREE.Matrix4().getInverse(markerTransform);
       cameraTransform.premultiply(new THREE.Matrix4().makeScale(0.08, 0.08, 0.08));
-      //pseudoMarker.matrix.clone().multiply(cameraTransform);
+      cameraTransform.premultiply(pseudoMarker.matrixWorld);
       pseudoCamera.matrix.copy(cameraTransform);
       //console.log(new THREE.Vector4(0, 0, 0, 1).applyMatrix4(cameraTransform));
 
