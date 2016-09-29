@@ -9,10 +9,11 @@ To run the application run the following commands in the given order.
 1. `npm install`
 2. `npm start`
 
-## Run tests
-We are using using karma as a test runner. To run this give the following in your terminal.
+## Run Karma tests (runs /spec/browser)
+`npm test`
 
-`./karma start`
+### There is infrastructure for server side tests (/spec/server)
+`jasmine`
 
 ## Pipline
 You can see the pipiline on:
