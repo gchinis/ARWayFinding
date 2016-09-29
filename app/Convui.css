@@ -88,3 +88,9 @@ body {
 .hidden {
     display: none;
 }
+
+.blue-button {
+    width: 150px;
+    color: #FFFFFF;
+    background: #4e92df;
+}

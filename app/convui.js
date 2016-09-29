@@ -5,24 +5,27 @@ var ReactDOM = require('react-dom');
 
 var Parent = React.createClass({
   render: function () {
-    var robb = [{wait: 1000, text: "Hello, I'm Robb. How can I help you today?"}, {
-      wait: 4000,
-      text: "You're looking for wall paint? I know exactly where you can find some!"
-    }, {wait: 5000, text: "Follow me!"}];
-    var arrayLength = robb.length;
+    var robb = [
+      {key: 0, wait: 1000, text: "Hi, my name is Robb."},
+      {key: 1, wait: 4000, text: "Are you looking for a product? I can show you the way to any product in this store."},
+      {key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?", button: <button class="blue-button">Ok, let's go</button>}
+     ];
+
     setTimeout(function () {
       $("#ti").hide();
     }, 5000);
 
     var convo = [];
-    {
-      for (var i = 0; i < arrayLength; i++) {
-        convo.push(<Child wait={robb[i].wait} text={robb[i].text}/>)
-      }
-    }
+      for (var i = 0; i < robb.length; i++) {
+        if (robb[i].button) {
+          convo.push(<Child wait={robb[i].wait} text={robb[i].text} key={robb[i].key} button={robb[i].button} />)
+        } else {
+          convo.push(<Child wait={robb[i].wait} text={robb[i].text} key={robb[i].key } />)
+        }
+      };
 
     convo.push(
-      <li id="ti">
+      <li key="ti" id="ti">
         <div className="typing-indicator chat-bubble">
           <span></span>
           <span></span>
@@ -53,9 +56,7 @@ var Child = React.createClass({
   },
   render: function () {
     return (
-      <div className={this.state.hidden}>
-        <li className="chat-bubble">{this.props.text}</li>
-      </div>
+      <li className={"chat-bubble "+ this.state.hidden}>{this.props.text}</li>
     )
   }
 });
