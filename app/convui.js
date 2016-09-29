@@ -22,7 +22,7 @@ var Parent = React.createClass({
           <span></span>
         </div>
       </li>
-    )
+    );
     return (
         <ul className="chat-list">
           {convo}
@@ -53,10 +53,10 @@ var Child = React.createClass({
     }
 });
 
-const conversationalUI = () =>
+window.conversationalUI = () =>
 {
     ReactDOM.render(
     < Parent / >,
         document.getElementById('chat-list')
     );
-}
+};
