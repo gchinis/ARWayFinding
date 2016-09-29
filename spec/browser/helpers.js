@@ -1,3 +1,5 @@
+const Promise = require("bluebird");
+
 // Wait for an event to fire once on the given object.
 const waitForEvent = (eventTarget, eventType) => {
   return new Promise((resolve, reject) => {
@@ -8,6 +10,18 @@ const waitForEvent = (eventTarget, eventType) => {
     eventTarget.addEventListener(eventType, listener);
   });
 };
+
+
+// Convenience wrapper to test a promise.
+const testPromise = (makePromise) => (done) => {
+  return makePromise().then(() => {
+    done();
+    return null;
+  }).catch((error) => {
+    done.fail(error);
+  });
+};
+
 
 // Adds an image element to the DOM (inside a preexisting element with
 // id imageContainer) for the given image (name relative to asset
@@ -35,5 +49,6 @@ const loadImage = (fileName) => {
 
 export {
   waitForEvent,
+  testPromise,
   loadImage
 };
