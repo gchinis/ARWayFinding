@@ -22,7 +22,8 @@ describe("Marker recognition", () => {
   const cameraParamUrl = '/base/spec/testAssets/camera_para.dat';
   const markerDefinitions = [
     { id: 2, size: 0.08 },
-    { id: 19, size: 0.15 }
+    { id: 19, size: 0.15 },
+    { id: 20, size: 0.10 }
   ];
 
   const determineCameraPosition = (cameraTransform) => {
