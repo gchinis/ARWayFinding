@@ -56,7 +56,7 @@ var Child = React.createClass({
 window.conversationalUI = () =>
 {
     ReactDOM.render(
-    < Parent / >,
+    < Parent />,
         document.getElementById('chat-list')
     );
 };
