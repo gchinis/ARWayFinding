@@ -8,12 +8,8 @@ var Parent = React.createClass({
     var robb = [
       {key: 0, wait: 1000, text: "Hi, my name is Robb."},
       {key: 1, wait: 4000, text: "Are you looking for a product? I can show you the way to any product in this store."},
-      {key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?", button: <a href="#"><div className="blue-button">Ok, let's go</div></a>}
+      {key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?", button: <div id="letsgo"></div> }
      ];
-
-    setTimeout(function () {
-      $("#ti").hide();
-    }, 5000);
 
     var convo = [];
       for (var i = 0; i < robb.length; i++) {
@@ -33,6 +29,9 @@ var Parent = React.createClass({
         </div>
       </li>
     );
+    setTimeout(function () {
+      $("#ti").hide();
+    }, 5000);
     return (
       <ul className="chat-list">
         {convo}
