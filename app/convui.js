@@ -8,7 +8,7 @@ var Parent = React.createClass({
     var robb = [
       {key: 0, wait: 1000, text: "Hi, my name is Robb."},
       {key: 1, wait: 4000, text: "Are you looking for a product? I can show you the way to any product in this store."},
-      {key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?", button: <button class="blue-button">Ok, let's go</button>}
+      {key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?", button: <a href="#"><div className="blue-button">Ok, let's go</div></a>}
      ];
 
     setTimeout(function () {
@@ -56,7 +56,7 @@ var Child = React.createClass({
   },
   render: function () {
     return (
-      <li className={"chat-bubble "+ this.state.hidden}>{this.props.text}</li>
+        <li className={"chat-bubble "+ this.state.hidden}>{this.props.text}{this.props.button ? this.props.button : ""}</li>
     )
   }
 });

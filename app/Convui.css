@@ -90,7 +90,15 @@ body {
 }
 
 .blue-button {
-    width: 150px;
+    width: 100px;
     color: #FFFFFF;
     background: #4e92df;
+    border-radius: 10px;
+    margin: 10px auto;
+    padding: 5px 0px;
+    text-align: center;
+}
+
+a {
+  text-decoration: none;
 }
