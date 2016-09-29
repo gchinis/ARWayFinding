@@ -78,9 +78,9 @@ describe("Marker recognition", () => {
         expect(markers[0].id).to.equal(2);
 
         var cameraPos = determineCameraPosition(markers[0].cameraTransform);
-        expect(cameraPos.x).to.be.within(-0.1, 0.1);
-        expect(cameraPos.y).to.be.within(-0.1, 0.1);
-        expect(cameraPos.z).to.be.within(0.5, 0.7);
+        expect(cameraPos.x).to.be.within(-0.2, 0.2);
+        expect(cameraPos.y).to.be.within(-0.2, 0.2);
+        expect(cameraPos.z).to.be.within(0.2, 0.4);
       });
     });
   }));
