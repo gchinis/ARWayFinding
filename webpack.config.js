@@ -6,6 +6,7 @@ module.exports = {
     "babel-polyfill",
     "./app/convui.js",
     "./app/camera-access.js",
+    "./app/camera-stream.js",
     "./app/3dsandbox.js"
   ],
   output: {

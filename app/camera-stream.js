@@ -2,7 +2,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 var Camera = React.createClass({
-  myClick: function () {
+  render: function () {
              navigator.getUserMedia = (navigator.getUserMedia ||
                navigator.webkitGetUserMedia ||
                navigator.mozGetUserMedia || 
@@ -12,11 +12,11 @@ var Camera = React.createClass({
                navigator.getUserMedia({video: true},
                  function(localMediaStream) {
                    // Get a reference to the video element on the page.
-                   //          var vid = document.getElementById('camera-stream');
+                             var vid = document.getElementById('camera-stream');
 
                    // Create an object URL for the video stream and use this 
                    // to set the video source.
-                   //         vid.src = window.URL.createObjectURL(localMediaStream);
+                            vid.src = window.URL.createObjectURL(localMediaStream);
 
                  },
                  function(err) {
@@ -27,13 +27,8 @@ var Camera = React.createClass({
                alert('Sorry, your browser does not support getUserMedia');
              }
            },
-    render: function() {
-              return (
-                  <a href="/convui-camera.html" onClick={this.myClick}><div className="blue-button">Ok, le&#39;s go!</div></a>
-                  )
-            }
 });
 
-window.letsgo = () => {
-  ReactDOM.render(<Camera />, document.getElementById('letsgo'));
+window.cameraStream = () => {
+  ReactDOM.render(<Camera />, document.getElementById('video-container'));
 };

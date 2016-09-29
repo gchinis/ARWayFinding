@@ -3,7 +3,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-var Parent = React.createClass({
+var Robb = React.createClass({
   render: function () {
     var robb = [
       {key: 0, wait: 1000, text: "Hi, my name is Robb."},
@@ -14,9 +14,9 @@ var Parent = React.createClass({
     var convo = [];
       for (var i = 0; i < robb.length; i++) {
         if (robb[i].button) {
-          convo.push(<Child wait={robb[i].wait} text={robb[i].text} key={robb[i].key} button={robb[i].button} />)
+          convo.push(<Chat wait={robb[i].wait} text={robb[i].text} key={robb[i].key} button={robb[i].button} />)
         } else {
-          convo.push(<Child wait={robb[i].wait} text={robb[i].text} key={robb[i].key } />)
+          convo.push(<Chat wait={robb[i].wait} text={robb[i].text} key={robb[i].key } />)
         }
       };
 
@@ -40,7 +40,7 @@ var Parent = React.createClass({
   }
 });
 
-var Child = React.createClass({
+var Chat = React.createClass({
   getInitialState: function () {
     return ({hidden: "hidden"});
   },
@@ -62,7 +62,7 @@ var Child = React.createClass({
 
 window.conversationalUI = () => {
   ReactDOM.render(
-    < Parent />,
+    < Robb />,
     document.getElementById('chat-list')
   );
 };
