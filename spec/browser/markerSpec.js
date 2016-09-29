@@ -1,5 +1,7 @@
 import { makeMarkerDetector } from "../../app/marker.js";
 
+import { expect } from "chai";
+
 import { loadImage } from "./helpers.js";
 
 
@@ -21,7 +23,7 @@ describe("Markers are recognized as part of arbitrary pictures", () => {
     return makeMarkerDetector(cameraParamUrl).then((detectMarkers) => {
       return loadImage('marker_no_markers.jpg').then((image) => {
         let markers = detectMarkers(image);
-        expect(markers.length).toBe(0);
+        expect(markers.length).to.equal(0);
         done();
       });
     }).catch(() => {
@@ -33,8 +35,8 @@ describe("Markers are recognized as part of arbitrary pictures", () => {
     return makeMarkerDetector(cameraParamUrl).then((detectMarkers) => {
       return loadImage('marker_3x3_id20.jpg').then((image) => {
         let markers = detectMarkers(image);
-        expect(markers.length).toBe(1);
-        expect(markers[0].id).toBe(20);
+        expect(markers.length).to.equal(1);
+        expect(markers[0].id).to.equal(20);
         done();
       });
     }).catch(() => {
@@ -46,9 +48,9 @@ describe("Markers are recognized as part of arbitrary pictures", () => {
     return makeMarkerDetector(cameraParamUrl).then((detectMarkers) => {
       return loadImage('marker_3x3_id1_id2.jpg').then((image) => {
         let markers = detectMarkers(image);
-        expect(markers.length).toBe(2);
-        expect(markers[0].id).toBe(19);
-        expect(markers[1].id).toBe(2);
+        expect(markers.length).to.equal(2);
+        expect(markers[0].id).to.equal(19);
+        expect(markers[1].id).to.equal(2);
         done();
       });
     }).catch(() => {

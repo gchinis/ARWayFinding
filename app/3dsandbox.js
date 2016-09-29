@@ -110,6 +110,7 @@ const cameraLocationInScene = () => {
     })
   );
   pseudoMarker.add(markerSurface);
+  pseudoMarker.add(createAxes());
   pseudoMarker.rotation.y = Math.PI / 2;
   pseudoMarker.position.set(-1.98, 1.5, 0);
   room.add(pseudoMarker);
