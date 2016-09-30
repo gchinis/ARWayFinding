@@ -60,6 +60,22 @@ describe("Marker recognition", () => {
     });
   }));
 
+  it("finds a marker twice with continuous detection", testPromise(() => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+      return loadImage('marker_3x3_id20.jpg').then((image) => {
+        let markers = detectMarkers(image);
+        expect(markers.length).to.equal(1);
+        expect(markers[0].id).to.equal(20);
+
+        // Second detection passes the previous results to allow for
+        // continuous detection in ARToolkit.
+        let markers2 = detectMarkers(image, markers);
+        expect(markers2.length).to.equal(1);
+        expect(markers2[0].id).to.equal(20);
+      });
+    });
+  }));
+
   it("finds only one marker in a picture with more markers", testPromise(() => {
     return makeMarkerDetector(cameraParamUrl, [markerDefinitions[0]]).then((detectMarkers) => {
       return loadImage('marker_3x3_id1_id2.jpg').then((image) => {
