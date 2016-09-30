@@ -20,9 +20,9 @@ const makeMarkerDetector = (cameraParamUrl, markerDefinitions) => {
     const controller = new ARController(640, 480, cameraParam);
     controller.setPatternDetectionMode(artoolkit.AR_MATRIX_CODE_DETECTION);
 
-    const markerToDef = [];
+    const markerDefsById = [];
     for (let m of markerDefinitions) {
-      markerToDef[m.id] = m;
+      markerDefsById[m.id] = m;
     }
 
     const makeCameraTransform = (markerIndex, markerSize, previousArtoolkitTransform) => {
@@ -56,7 +56,7 @@ const makeMarkerDetector = (cameraParamUrl, markerDefinitions) => {
 
     const getDetectedMarkerDefs = function* () {
       for (let [markerIndex, markerInfo] of getDetectedMarkerInfo()) {
-        let markerDef = markerToDef[markerInfo.id];
+        let markerDef = markerDefsById[markerInfo.id];
         if (markerDef !== undefined) {
           yield [markerIndex, markerInfo, markerDef];
         }
@@ -64,16 +64,16 @@ const makeMarkerDetector = (cameraParamUrl, markerDefinitions) => {
     };
 
     const makeDetectedMarkerResults = function* (previousMarkers) {
-      let previousMarkersIndexed = [];
+      let previousMarkersById = [];
       if (previousMarkers) {
         for (let marker of previousMarkers) {
-          previousMarkersIndexed[marker.id] = marker;
+          previousMarkersById[marker.id] = marker;
         }
       }
 
       for (let [markerIndex, markerInfo, markerDef] of getDetectedMarkerDefs()) {
         let [artoolkitTransform, cameraTransform] = makeCameraTransform(markerIndex, markerDef.size,
-                                                                        previousMarkersIndexed[markerInfo.id]);
+                                                                        previousMarkersById[markerInfo.id]);
         yield {
           id: markerInfo.id,
           cameraTransform: cameraTransform,
