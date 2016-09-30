@@ -42,16 +42,23 @@ const createAxes = () => {
   return axes;
 };
 
-const addLighting = (scene) => {
+const makeLighting = function* (scene) {
   var light = new THREE.PointLight(0xffffff);
   //light.position.set(30, 50, 50);
   light.position.set(0, 2, 0);
-  scene.add(light);
+  yield light;
+
   light = new THREE.AmbientLight( 0x404040 ); // soft white light
-  scene.add( light );
+  yield light;
   //light = new THREE.PointLight(0xffffff);
   //light.position.set(-400, -500, -100);
   //scene.add(light);
+};
+
+const addElements = (container, elements) => {
+  for (let element of elements) {
+    container.add(element);
+  }
 };
 
 const cameraLocationInScene = () => {
@@ -72,8 +79,8 @@ const cameraLocationInScene = () => {
   var scene = new THREE.Scene();
   var debugScene = new THREE.Scene();
 
-  addLighting(scene);
-  addLighting(debugScene);
+  addElements(scene, makeLighting());
+  addElements(debugScene, makeLighting());
 
   var room = new THREE.Object3D();
   scene.add(room);
@@ -110,7 +117,7 @@ const cameraLocationInScene = () => {
     })
   );
   pseudoMarker.add(markerSurface);
-  pseudoMarker.add(createAxes());
+  //pseudoMarker.add(createAxes());
   pseudoMarker.rotation.y = Math.PI / 2;
   pseudoMarker.position.set(-1.98, 1.5, 0);
   room.add(pseudoMarker);
