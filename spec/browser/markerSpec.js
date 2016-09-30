@@ -31,7 +31,7 @@ describe("Marker recognition", () => {
   };
 
   it("finds zero markers in a picture without markers", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_no_markers.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(0);
@@ -40,7 +40,7 @@ describe("Marker recognition", () => {
   }));
 
   it("finds one marker in a picture", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_id20.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -50,7 +50,7 @@ describe("Marker recognition", () => {
   }));
 
   it("finds two markers in a picture", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_id1_id2.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(2);
@@ -61,7 +61,7 @@ describe("Marker recognition", () => {
   }));
 
   it("finds a marker twice with continuous detection", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_id20.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -77,7 +77,7 @@ describe("Marker recognition", () => {
   }));
 
   it("finds only one marker in a picture with more markers", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, [markerDefinitions[0]]).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, [markerDefinitions[0]]).then(({detectMarkers}) => {
       return loadImage('marker_3x3_id1_id2.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -87,7 +87,7 @@ describe("Marker recognition", () => {
   }));
 
   it("determines right camera position when marker is seen from front", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_seen_from_front.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -102,7 +102,7 @@ describe("Marker recognition", () => {
   }));
 
   it("determines right camera position when marker is seen from bottom", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_seen_from_bottom.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -117,7 +117,7 @@ describe("Marker recognition", () => {
   }));
 
   it("determines right camera position when marker is seen from top", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_seen_from_top.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -132,7 +132,7 @@ describe("Marker recognition", () => {
   }));
 
   it("determines right camera position when marker is seen from left", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_seen_from_left.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -147,7 +147,7 @@ describe("Marker recognition", () => {
   }));
 
   it("determines right camera position when marker is seen from right", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_seen_from_right.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -162,7 +162,7 @@ describe("Marker recognition", () => {
   }));
 
   it("determines right camera position when marker is seen from far", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_seen_from_far.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -177,7 +177,7 @@ describe("Marker recognition", () => {
   }));
 
   it("determines right camera position when marker is seen from near", testPromise(() => {
-    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then((detectMarkers) => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions).then(({detectMarkers}) => {
       return loadImage('marker_3x3_seen_from_near.jpg').then((image) => {
         let markers = detectMarkers(image);
         expect(markers.length).to.equal(1);
@@ -193,7 +193,7 @@ describe("Marker recognition", () => {
 
   // TODO: jsartoolkit5 apparently doesn't report errors correctly.
   xit("reports a failure if camera params can't be read", (done) => {
-    return makeMarkerDetector('/base/spec/testAssets/marker_3x3_id20.jpg', markers).then((detectMarkers) => {
+    return makeMarkerDetector('/base/spec/testAssets/marker_3x3_id20.jpg', markers).then(({detectMarkers}) => {
       done.fail("No failure reported");
     }).catch(() => {
       done();
