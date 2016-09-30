@@ -25,12 +25,16 @@ const makeMarkerDetector = (cameraParamUrl, markerDefinitions) => {
       markerToDef[m.id] = m;
     }
 
-    let artoolkitTransform = new Float32Array(12);
-    let glTransform = new Float32Array(16);
-
-
-    const makeCameraTransform = (markerIndex, markerSize) => {
+    const makeCameraTransform = (markerIndex, markerSize, previousArtoolkitTransform) => {
+      let artoolkitTransform = new Float32Array(12);
       controller.getTransMatSquare(markerIndex, 1, artoolkitTransform);
+      if (previousArtoolkitTransform) {
+        controller.getTransMatSquareCont(markerIndex, 1, previousArtoolkitTransform, artoolkitTransform);
+      } else {
+        controller.getTransMatSquare(markerIndex, 1, artoolkitTransform);
+      }
+
+      let glTransform = new Float32Array(16);
       controller.transMatToGLMat(artoolkitTransform, glTransform);
 
       let markerTransform = new THREE.Matrix4().fromArray(glTransform);
@@ -40,7 +44,7 @@ const makeMarkerDetector = (cameraParamUrl, markerDefinitions) => {
         markerSize, markerSize, markerSize
       ));
 
-      return cameraTransform;
+      return [artoolkitTransform, cameraTransform];
     };
 
     const getDetectedMarkerInfo = function* () {
@@ -59,18 +63,28 @@ const makeMarkerDetector = (cameraParamUrl, markerDefinitions) => {
       }
     };
 
-    const makeDetectedMarkerResults = function* () {
+    const makeDetectedMarkerResults = function* (previousMarkers) {
+      let previousMarkersIndexed = [];
+      if (previousMarkers) {
+        for (let marker of previousMarkers) {
+          previousMarkersIndexed[marker.id] = marker;
+        }
+      }
+
       for (let [markerIndex, markerInfo, markerDef] of getDetectedMarkerDefs()) {
+        let [artoolkitTransform, cameraTransform] = makeCameraTransform(markerIndex, markerDef.size,
+                                                                        previousMarkersIndexed[markerInfo.id]);
         yield {
           id: markerInfo.id,
-          cameraTransform: makeCameraTransform(markerIndex, markerDef.size)
+          cameraTransform: cameraTransform,
+          artoolkitTransform: artoolkitTransform
         };
       }
     };
 
-    return (imageElem) => {
+    return (imageElem, previousMarkers) => {
       controller.detectMarker(imageElem);
-      return Array.from(makeDetectedMarkerResults());
+      return Array.from(makeDetectedMarkerResults(previousMarkers));
     };
   });
 };
