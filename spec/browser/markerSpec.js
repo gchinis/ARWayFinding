@@ -191,6 +191,19 @@ describe("Marker recognition", () => {
     });
   }));
 
+  it("provides a usable camera projection matrix", testPromise(() => {
+    return makeMarkerDetector(cameraParamUrl, markerDefinitions)
+      .then(({detectMarkers, cameraProjectionMatrix}) => {
+        return loadImage('marker_3x3_id20.jpg').then((image) => {
+          let markers = detectMarkers(image);
+          expect(markers.length).to.equal(1);
+          expect(markers[0].id).to.equal(20);
+
+          expect(cameraProjectionMatrix).to.be.an.instanceof(THREE.Matrix4);
+        });
+      });
+  }));
+
   // TODO: jsartoolkit5 apparently doesn't report errors correctly.
   xit("reports a failure if camera params can't be read", (done) => {
     return makeMarkerDetector('/base/spec/testAssets/marker_3x3_id20.jpg', markers).then(({detectMarkers}) => {
