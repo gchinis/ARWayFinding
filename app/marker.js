@@ -82,10 +82,16 @@ const makeMarkerDetector = (cameraParamUrl, markerDefinitions) => {
       }
     };
 
-    return (imageElem, previousMarkers) => {
-      controller.detectMarker(imageElem);
-      return Array.from(makeDetectedMarkerResults(previousMarkers));
-    };
+    var cameraProjectionMatrix = new THREE.Matrix4();
+    cameraProjectionMatrix.elements.set(controller.getCameraMatrix());
+
+    return Promise.resolve({
+      detectMarkers: (imageElem, previousMarkers) => {
+        controller.detectMarker(imageElem);
+        return Array.from(makeDetectedMarkerResults(previousMarkers));
+      },
+      cameraProjectionMatrix
+    });
   });
 };
 
