@@ -3,6 +3,9 @@ const THREE = require('three');
 const TrackballControls = require('three-trackballcontrols');
 import { artoolkit, ARController, ARCameraParam } from "./artoolkit.js";
 
+import { makeMarkerDetector } from "./marker.js";
+
+
 const createAxes = () => {
   var axes = new THREE.Object3D();
 
@@ -109,7 +112,7 @@ const addElements = (container, elements) => {
 };
 
 const cameraLocationInScene = () => {
-  var video = document.getElementById('v');
+  let video = document.getElementById('v');
 
   var renderer = new THREE.WebGLRenderer();
   renderer.autoClear = false;
@@ -117,19 +120,24 @@ const cameraLocationInScene = () => {
   renderer.setSize(video.width, video.height);
   document.body.appendChild(renderer.domElement);
 
+  var scene = new THREE.Scene();
+
+  let [roomObjects, markers] = makeRoom();
+  addElements(scene, roomObjects);
+  addElements(scene, makeLighting());
+
+  var camera = new THREE.Camera();
+  camera.matrixAutoUpdate = false;
+  scene.add(camera);
+
+
   var debugRenderer = new THREE.WebGLRenderer();
   debugRenderer.autoClear = false;
   debugRenderer.setClearColor(0xffffff);
   debugRenderer.setSize(video.width, video.height);
   document.body.appendChild(debugRenderer.domElement);
 
-  var scene = new THREE.Scene();
   var debugScene = new THREE.Scene();
-
-  let [roomObjects, markers] = makeRoom();
-  addElements(scene, roomObjects);
-  addElements(scene, makeLighting());
-  addElements(debugScene, makeLighting());
 
   var cameraPoseIndicator = new THREE.Object3D();
   cameraPoseIndicator.matrixAutoUpdate = false;
@@ -144,6 +152,8 @@ const cameraLocationInScene = () => {
   debugCamera.position.set(-0.4, 1.5, 0);
   scene.add(debugCamera);
 
+  addElements(debugScene, makeLighting());
+
   var controls = new TrackballControls(debugCamera, debugRenderer.domElement);
   controls.target.set(-1.2, 1.5, 0);
   controls.rotateSpeed = 0.7;
@@ -152,13 +162,6 @@ const cameraLocationInScene = () => {
   controls.staticMoving = true;
   controls.dynamicDampingFactor = 0.3;
 
-  //var camera = new THREE.PerspectiveCamera(45, 4/3, 0.1, 1000);
-  var camera = new THREE.Camera();
-  camera.matrixAutoUpdate = false;
-  scene.add(camera);
-
-
-  var arController = null;
 
   navigator.mediaDevices.getUserMedia({
     video: {
@@ -167,91 +170,41 @@ const cameraLocationInScene = () => {
   }).then((stream) => {
     video.src = window.URL.createObjectURL(stream);
     video.play();
-  });
 
-  var artoolkitTransform = new Float32Array(12);
-  var glTransform = new Float32Array(16);
+    return makeMarkerDetector('camera/camera_para.dat', [{ id: 2, size: 0.08 }]);
+  }).then(({detectMarkers, cameraProjectionMatrix}) => {
+    camera.projectionMatrix.copy(cameraProjectionMatrix);
 
-  // On every frame do the following:
-  function tick() {
-    requestAnimationFrame(tick);
+    function tick() {
+      requestAnimationFrame(tick);
 
-    if (!arController) {
-      return;
-    }
+      let seenMarkers = detectMarkers(video);
+      if (seenMarkers.length > 0) {
+        let cameraTransform = seenMarkers[0].cameraTransform.clone()
+              .premultiply(markers[0].matrixWorld);
 
-    arController.detectMarker(video);
-    var markerNum = arController.getMarkerNum();
-    var markerInfo;
-    for (var i = 0; i < markerNum; i++) {
-      markerInfo = arController.getMarker(i);
-      if (markerInfo.id === 2) {
-        break;
-      }
-    }
-    if (i === markerNum) {
-      markerInfo = null;
-    }
+        camera.matrix.copy(cameraTransform);
+        cameraPoseIndicator.matrix.copy(cameraTransform);
 
-    if (markerInfo) {
-      if (markerInfo.dir !== markerInfo.dirPatt) {
-        arController.setMarkerInfoDir(i, markerInfo.dirMatrix);
-      }
-
-      if (cameraPoseIndicator.visible) {
-        arController.getTransMatSquareCont(
-          i,
-          1,
-          artoolkitTransform,
-          artoolkitTransform);
+        cameraPoseIndicator.visible = true;
       } else {
-        arController.getTransMatSquare(
-          i,
-          1,
-          artoolkitTransform);
+        cameraPoseIndicator.visible = false;
       }
-      arController.transMatToGLMat(artoolkitTransform, glTransform);
 
-      var markerTransform = new THREE.Matrix4().fromArray(glTransform);
-      var cameraTransform = new THREE.Matrix4().getInverse(markerTransform);
+      //arController.debugDraw();
 
-      cameraTransform.premultiply(new THREE.Matrix4().makeScale(0.08, 0.08, 0.08));
-      cameraTransform.premultiply(markers[0].matrixWorld);
+      controls.update();
 
-      camera.matrix.copy(cameraTransform);
-      cameraPoseIndicator.matrix.copy(cameraTransform);
+      renderer.clear();
+      renderer.render(scene, camera);
 
-      //console.log(new THREE.Vector4(0, 0, 0, 1).applyMatrix4(cameraTransform));
-
-      cameraPoseIndicator.visible = true;
-    } else {
-      cameraPoseIndicator.visible = false;
+      debugRenderer.clear();
+      debugRenderer.render(scene, debugCamera);
+      debugRenderer.render(debugScene, debugCamera);
     }
 
-    arController.debugDraw();
-
-    controls.update();
-
-    renderer.clear();
-    renderer.render(scene, camera);
-
-    debugRenderer.clear();
-    debugRenderer.render(scene, debugCamera);
-    debugRenderer.render(debugScene, debugCamera);
-  }
-
-  tick();
-
-  var cameraParam = new ARCameraParam();
-  cameraParam.onload = function() {
-    arController = new ARController(320, 240, cameraParam);
-    arController.setPatternDetectionMode(artoolkit.AR_MATRIX_CODE_DETECTION);
-    //arController.debugSetup();
-
-    var cameraMat = arController.getCameraMatrix();
-    camera.projectionMatrix.elements.set(cameraMat);
-  };
-  cameraParam.load('camera/camera_para.dat');
+    tick();
+  });
 };
 
 
