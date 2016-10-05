@@ -23,7 +23,6 @@ module.exports = function(config) {
     files: [
       // Hack to import the Babel polyfill once for all tests.
       'node_modules/babel-polyfill/browser.js',
-
       'spec/browser/**/*Spec.js',
       {pattern: 'spec/testAssets/*', watched: false, included: false, served: true, nocache: true},
     ],
