@@ -47,9 +47,7 @@ const createAxes = () => {
   return axes;
 };
 
-const cameraLocationInScene = () => {
-  let video = document.getElementById('v');
-
+const makeARView = (video) => {
   var renderer = new THREE.WebGLRenderer();
   renderer.autoClear = false;
   renderer.setClearColor(0xffffff);
@@ -58,18 +56,9 @@ const cameraLocationInScene = () => {
 
   var scene = new THREE.Scene();
 
-  let { room, lights, markers } = makeRoom();
-
-  var robot = makeRobot();
-  robot.position.set(-1.2, 0, 0);
-  scene.add(robot);
-
-  scene.add(lights);
-
   var camera = new THREE.Camera();
   camera.matrixAutoUpdate = false;
   scene.add(camera);
-
 
   // To display the video, first create a texture from it.
   var videoTex = new THREE.Texture(video);
@@ -93,6 +82,30 @@ const cameraLocationInScene = () => {
   var videoScene = new THREE.Scene();
   videoScene.add(videoPlane);
   videoScene.add(videoCamera);
+
+  const updateFrame = () => {
+    renderer.clear();
+    videoTex.needsUpdate = true;
+    renderer.render(videoScene, videoCamera);
+    renderer.render(scene, camera);
+  };
+
+  return { scene, camera, updateFrame };
+};
+
+const cameraLocationInScene = () => {
+  let video = document.getElementById('v');
+
+  let { room, lights, markers } = makeRoom();
+
+  let { scene, camera, updateFrame: updateSceneFrame } = makeARView(video);
+
+
+  var robot = makeRobot();
+  robot.position.set(-1.2, 0, 0);
+  scene.add(robot);
+
+  scene.add(lights);
 
 
   var debugRenderer = new THREE.WebGLRenderer();
@@ -160,10 +173,7 @@ const cameraLocationInScene = () => {
 
       controls.update();
 
-      renderer.clear();
-      videoTex.needsUpdate = true;
-      renderer.render(videoScene, videoCamera);
-      renderer.render(scene, camera);
+      updateSceneFrame();
 
       debugRenderer.clear();
       debugRenderer.render(scene, debugCamera);
