@@ -1,5 +1,6 @@
 import "webrtc-adapter";
 const THREE = require('three');
+const Rx = require('rx') && require('rx-dom');
 const TrackballControls = require('three-trackballcontrols');
 import { artoolkit, ARController, ARCameraParam } from "./artoolkit.js";
 
@@ -146,6 +147,15 @@ const makeDebugView = (video, scene) => {
   return { debugScene, updateFrame };
 };
 
+const makeAnimationFrameSource = (value) => {
+  return Rx.Observable.generate(
+    0,
+    () => true,
+    () => 0,
+    () => value,
+    Rx.Scheduler.requestAnimationFrame);
+};
+
 const cameraLocationInScene = () => {
   let video = document.getElementById('v');
 
@@ -173,24 +183,17 @@ const cameraLocationInScene = () => {
     debugScene.add(room);
     debugScene.add(lights.clone());
 
-    function tick() {
-      requestAnimationFrame(tick);
+    let cameraTransforms = makeAnimationFrameSource(video)
+          .map((video) => {
+            let seenMarkers = detectMarkers(video);
+            return seenMarkers.length > 0 ?
+              seenMarkers[0].cameraTransform.clone().premultiply(markers[0].matrixWorld)
+              : undefined;
+          });
 
-      let seenMarkers = detectMarkers(video);
-      let cameraTransform;
-      if (seenMarkers.length > 0) {
-        cameraTransform = seenMarkers[0].cameraTransform.clone()
-              .premultiply(markers[0].matrixWorld);
-      }
-
-      //arController.debugDraw();
-
-      updateARView(cameraTransform);
-      updateDebugView(cameraTransform);
-    }
-
-    tick();
-  });
+    cameraTransforms.forEach(updateARView);
+    cameraTransforms.forEach(updateDebugView);
+ });
 };
 
 // TODO: Remove this when we integrate UI and 3D into a single entry point.
