@@ -74,7 +74,7 @@ const makeRoom = () => {
     })
   );
   walls.position.y = 1.2;
-  room.add(walls);
+  //room.add(walls);
 
   let ground = new THREE.Mesh(
     new THREE.PlaneGeometry(15, 15, 8, 8),
@@ -129,6 +129,30 @@ const cameraLocationInScene = () => {
   var camera = new THREE.Camera();
   camera.matrixAutoUpdate = false;
   scene.add(camera);
+
+
+  // To display the video, first create a texture from it.
+  var videoTex = new THREE.Texture(video);
+
+  videoTex.minFilter = THREE.LinearFilter;
+  videoTex.flipY = false;
+
+  // Then create a plane textured with the video.
+  var videoPlane = new THREE.Mesh(
+    new THREE.PlaneBufferGeometry(2, 2),
+    new THREE.MeshBasicMaterial({map: videoTex, side: THREE.DoubleSide})
+  );
+
+  // The video plane shouldn't care about the z-buffer.
+  videoPlane.material.depthTest = false;
+  videoPlane.material.depthWrite = false;
+
+  // Create a camera and a scene for the video plane and
+  // add the camera and the video plane to the scene.
+  var videoCamera = new THREE.OrthographicCamera(-1, 1, -1, 1, -1, 1);
+  var videoScene = new THREE.Scene();
+  videoScene.add(videoPlane);
+  videoScene.add(videoCamera);
 
 
   var debugRenderer = new THREE.WebGLRenderer();
@@ -196,6 +220,8 @@ const cameraLocationInScene = () => {
       controls.update();
 
       renderer.clear();
+      videoTex.needsUpdate = true;
+      renderer.render(videoScene, videoCamera);
       renderer.render(scene, camera);
 
       debugRenderer.clear();
