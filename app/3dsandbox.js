@@ -74,7 +74,7 @@ const makeRoom = () => {
     })
   );
   walls.position.y = 1.2;
-  //room.add(walls);
+  room.add(walls);
 
   let ground = new THREE.Mesh(
     new THREE.PlaneGeometry(15, 15, 8, 8),
@@ -122,8 +122,30 @@ const cameraLocationInScene = () => {
 
   var scene = new THREE.Scene();
 
-  let [roomObjects, markers] = makeRoom();
-  addElements(scene, roomObjects);
+  var robot = new THREE.Object3D();
+  robot.position.set(-1.2, 0, 0);
+  scene.add(robot);
+
+  var robotBody = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.25, 0.25, 0.4, 15, 10),
+    new THREE.MeshLambertMaterial({
+      color: 0xcf2828,
+      wireframe: false
+    })
+  );
+  robotBody.position.y = 0.2;
+  robot.add(robotBody);
+
+  var robotHead = new THREE.Mesh(
+    new THREE.SphereGeometry(0.25, 15),
+    new THREE.MeshLambertMaterial({
+      color: 0xcf2828,
+      wireframe: false
+    })
+  );
+  robotHead.position.y = 0.4;
+  robot.add(robotHead);
+
   addElements(scene, makeLighting());
 
   var camera = new THREE.Camera();
@@ -163,6 +185,10 @@ const cameraLocationInScene = () => {
 
   var debugScene = new THREE.Scene();
 
+  let [roomObjects, markers] = makeRoom();
+  addElements(debugScene, roomObjects);
+  addElements(debugScene, makeLighting());
+
   var cameraPoseIndicator = new THREE.Object3D();
   cameraPoseIndicator.matrixAutoUpdate = false;
   cameraPoseIndicator.visible = false;
@@ -175,8 +201,6 @@ const cameraLocationInScene = () => {
   var debugCamera = new THREE.PerspectiveCamera(75, 4/3, 0.1, 1000);
   debugCamera.position.set(-0.4, 1.5, 0);
   scene.add(debugCamera);
-
-  addElements(debugScene, makeLighting());
 
   var controls = new TrackballControls(debugCamera, debugRenderer.domElement);
   controls.target.set(-1.2, 1.5, 0);
