@@ -10,7 +10,7 @@ const makeRobot = () => {
   var robot = new THREE.Object3D();
 
   var robotBody = new THREE.Mesh(
-    new THREE.CylinderGeometry(robotRadius, robotRadius, bodyHeight, 15, 10),
+    new THREE.CylinderGeometry(robotRadius, robotRadius, bodyHeight, 15, 10, true),
     new THREE.MeshLambertMaterial({
       color: robotColor,
       wireframe: false
@@ -20,7 +20,7 @@ const makeRobot = () => {
   robot.add(robotBody);
 
   var robotHead = new THREE.Mesh(
-    new THREE.SphereGeometry(robotRadius, 15),
+    new THREE.SphereGeometry(robotRadius, 15, 15, 0, Math.PI * 2, 0, Math.PI / 2),
     new THREE.MeshLambertMaterial({
       color: robotColor,
       wireframe: false
