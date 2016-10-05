@@ -93,21 +93,7 @@ const makeARView = (video) => {
   return { scene, camera, updateFrame };
 };
 
-const cameraLocationInScene = () => {
-  let video = document.getElementById('v');
-
-  let { room, lights, markers } = makeRoom();
-
-  let { scene, camera, updateFrame: updateSceneFrame } = makeARView(video);
-
-
-  var robot = makeRobot();
-  robot.position.set(-1.2, 0, 0);
-  scene.add(robot);
-
-  scene.add(lights);
-
-
+const makeDebugView = (video, scene) => {
   var debugRenderer = new THREE.WebGLRenderer();
   debugRenderer.autoClear = false;
   debugRenderer.setClearColor(0xffffff);
@@ -115,9 +101,6 @@ const cameraLocationInScene = () => {
   document.body.appendChild(debugRenderer.domElement);
 
   var debugScene = new THREE.Scene();
-
-  debugScene.add(room);
-  debugScene.add(lights.clone());
 
   var cameraPoseIndicator = new THREE.Object3D();
   cameraPoseIndicator.matrixAutoUpdate = false;
@@ -130,7 +113,7 @@ const cameraLocationInScene = () => {
 
   var debugCamera = new THREE.PerspectiveCamera(75, 4/3, 0.1, 1000);
   debugCamera.position.set(-0.4, 1.5, 0);
-  scene.add(debugCamera);
+  debugScene.add(debugCamera);
 
   var controls = new TrackballControls(debugCamera, debugRenderer.domElement);
   controls.target.set(-1.2, 1.5, 0);
@@ -139,6 +122,36 @@ const cameraLocationInScene = () => {
   controls.panSpeed = 0.4;
   controls.staticMoving = true;
   controls.dynamicDampingFactor = 0.3;
+
+  const updateFrame = () => {
+    controls.update();
+
+    debugRenderer.clear();
+    debugRenderer.render(scene, debugCamera);
+    debugRenderer.render(debugScene, debugCamera);
+  };
+
+  return { debugScene, cameraPoseIndicator, updateFrame };
+};
+
+const cameraLocationInScene = () => {
+  let video = document.getElementById('v');
+
+  let { room, lights, markers } = makeRoom();
+
+  let { scene, camera, updateFrame: updateARView } = makeARView(video);
+  let { debugScene, cameraPoseIndicator, updateFrame: updateDebugView } = makeDebugView(video, scene);
+
+
+  var robot = makeRobot();
+  robot.position.set(-1.2, 0, 0);
+  scene.add(robot);
+
+  scene.add(lights);
+
+
+  debugScene.add(room);
+  debugScene.add(lights.clone());
 
 
   navigator.mediaDevices.getUserMedia({
@@ -171,13 +184,8 @@ const cameraLocationInScene = () => {
 
       //arController.debugDraw();
 
-      controls.update();
-
-      updateSceneFrame();
-
-      debugRenderer.clear();
-      debugRenderer.render(scene, debugCamera);
-      debugRenderer.render(debugScene, debugCamera);
+      updateARView();
+      updateDebugView();
     }
 
     tick();
