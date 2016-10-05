@@ -4,6 +4,7 @@ const TrackballControls = require('three-trackballcontrols');
 import { artoolkit, ARController, ARCameraParam } from "./artoolkit.js";
 
 import { makeMarkerDetector } from "./marker.js";
+import { makeRobot } from "./robot.js";
 
 
 const createAxes = () => {
@@ -89,7 +90,7 @@ const makeRoom = () => {
 
   let pseudoMarker = new THREE.Object3D();
   let markerSurface = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.08, 0.08, 0.8, 1),
+    new THREE.PlaneGeometry(0.21, 0.21, 0.8, 1),
     new THREE.MeshLambertMaterial({
       color: 0xcf2828,
       wireframe: false
@@ -103,62 +104,6 @@ const makeRoom = () => {
   markers.push(pseudoMarker);
 
   return [objects, markers];
-};
-
-const makeRobot = () => {
-  const robotColor = 0xe54230;
-  const robotRadius = 0.25;
-  const bodyHeight = 0.4;
-
-  var robot = new THREE.Object3D();
-
-  var robotBody = new THREE.Mesh(
-    new THREE.CylinderGeometry(robotRadius, robotRadius, bodyHeight, 15, 10),
-    new THREE.MeshLambertMaterial({
-      color: robotColor,
-      wireframe: false
-    })
-  );
-  robotBody.position.y = 0.2;
-  robot.add(robotBody);
-
-  var robotHead = new THREE.Mesh(
-    new THREE.SphereGeometry(robotRadius, 15),
-    new THREE.MeshLambertMaterial({
-      color: robotColor,
-      wireframe: false
-    })
-  );
-  robotHead.position.y = bodyHeight;
-  robot.add(robotHead);
-
-  var robotEye1 = new THREE.Mesh(
-    new THREE.SphereGeometry(0.05, 5),
-    new THREE.MeshLambertMaterial({
-      color: 0x000000,
-      wireframe: false
-    })
-  );
-  robotEye1.translateY(bodyHeight);
-  robotEye1.rotateY(-Math.PI / 6);
-  robotEye1.rotateZ(Math.PI / 8);
-  robotEye1.translateX(robotRadius);
-  robot.add(robotEye1);
-
-  var robotEye2 = new THREE.Mesh(
-    new THREE.SphereGeometry(0.05, 5),
-    new THREE.MeshLambertMaterial({
-      color: 0x000000,
-      wireframe: false
-    })
-  );
-  robotEye2.translateY(bodyHeight);
-  robotEye2.rotateY(Math.PI / 6);
-  robotEye2.rotateZ(Math.PI / 8);
-  robotEye2.translateX(robotRadius);
-  robot.add(robotEye2);
-
-  return robot;
 };
 
 const addElements = (container, elements) => {
@@ -255,7 +200,7 @@ const cameraLocationInScene = () => {
     video.src = window.URL.createObjectURL(stream);
     video.play();
 
-    return makeMarkerDetector('camera/camera_para.dat', [{ id: 2, size: 0.08 }]);
+    return makeMarkerDetector('camera/camera_para.dat', [{ id: 2, size: 0.21 }]);
   }).then(({detectMarkers, cameraProjectionMatrix}) => {
     camera.projectionMatrix.copy(cameraProjectionMatrix);
 
