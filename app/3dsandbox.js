@@ -105,26 +105,8 @@ const makeRoom = () => {
   return [objects, markers];
 };
 
-const addElements = (container, elements) => {
-  for (let element of elements) {
-    container.add(element);
-  }
-};
-
-const cameraLocationInScene = () => {
-  let video = document.getElementById('v');
-
-  var renderer = new THREE.WebGLRenderer();
-  renderer.autoClear = false;
-  renderer.setClearColor(0xffffff);
-  renderer.setSize(video.width, video.height);
-  document.body.appendChild(renderer.domElement);
-
-  var scene = new THREE.Scene();
-
+const makeRobot = () => {
   var robot = new THREE.Object3D();
-  robot.position.set(-1.2, 0, 0);
-  scene.add(robot);
 
   var robotBody = new THREE.Mesh(
     new THREE.CylinderGeometry(0.25, 0.25, 0.4, 15, 10),
@@ -145,6 +127,30 @@ const cameraLocationInScene = () => {
   );
   robotHead.position.y = 0.4;
   robot.add(robotHead);
+
+  return robot;
+};
+
+const addElements = (container, elements) => {
+  for (let element of elements) {
+    container.add(element);
+  }
+};
+
+const cameraLocationInScene = () => {
+  let video = document.getElementById('v');
+
+  var renderer = new THREE.WebGLRenderer();
+  renderer.autoClear = false;
+  renderer.setClearColor(0xffffff);
+  renderer.setSize(video.width, video.height);
+  document.body.appendChild(renderer.domElement);
+
+  var scene = new THREE.Scene();
+
+  var robot = makeRobot();
+  robot.position.set(-1.2, 0, 0);
+  scene.add(robot);
 
   addElements(scene, makeLighting());
 
