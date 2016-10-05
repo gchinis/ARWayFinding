@@ -5,6 +5,7 @@ import { artoolkit, ARController, ARCameraParam } from "./artoolkit.js";
 
 import { makeMarkerDetector } from "./marker.js";
 import { makeRobot } from "./robot.js";
+import { makeLighting, makeRoom } from "./room.js";
 
 
 const createAxes = () => {
@@ -46,72 +47,6 @@ const createAxes = () => {
   return axes;
 };
 
-const makeLighting = function* () {
-  var light = new THREE.PointLight(0xffffff);
-  //light.position.set(30, 50, 50);
-  light.position.set(0, 2, 0);
-  yield light;
-
-  light = new THREE.AmbientLight( 0x404040 ); // soft white light
-  yield light;
-  //light = new THREE.PointLight(0xffffff);
-  //light.position.set(-400, -500, -100);
-  //scene.add(light);
-};
-
-const makeRoom = () => {
-  let objects = [], markers = [];
-
-  let room = new THREE.Object3D();
-  objects.push(room);
-
-  let walls = new THREE.Mesh(
-    new THREE.BoxGeometry(4, 2.5, 6, 5, 5, 5),
-    //new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshLambertMaterial({
-      color: 0x00ffff,
-      wireframe: false,
-      side: THREE.DoubleSide
-    })
-  );
-  walls.position.y = 1.2;
-  room.add(walls);
-
-  let ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(15, 15, 8, 8),
-    new THREE.MeshLambertMaterial({
-      color: 0xcfcfcf,
-      wireframe: false,
-      side: THREE.DoubleSide
-    })
-  );
-  ground.rotation.x = -Math.PI / 2;
-  objects.push(ground);
-
-  let pseudoMarker = new THREE.Object3D();
-  let markerSurface = new THREE.Mesh(
-    new THREE.PlaneGeometry(0.21, 0.21, 0.8, 1),
-    new THREE.MeshLambertMaterial({
-      color: 0xcf2828,
-      wireframe: false
-    })
-  );
-  pseudoMarker.add(markerSurface);
-  //pseudoMarker.add(createAxes());
-  pseudoMarker.rotation.y = Math.PI / 2;
-  pseudoMarker.position.set(-1.98, 1.5, 0);
-  room.add(pseudoMarker);
-  markers.push(pseudoMarker);
-
-  return [objects, markers];
-};
-
-const addElements = (container, elements) => {
-  for (let element of elements) {
-    container.add(element);
-  }
-};
-
 const cameraLocationInScene = () => {
   let video = document.getElementById('v');
 
@@ -123,11 +58,13 @@ const cameraLocationInScene = () => {
 
   var scene = new THREE.Scene();
 
+  let { room, lights, markers } = makeRoom();
+
   var robot = makeRobot();
   robot.position.set(-1.2, 0, 0);
   scene.add(robot);
 
-  addElements(scene, makeLighting());
+  scene.add(lights);
 
   var camera = new THREE.Camera();
   camera.matrixAutoUpdate = false;
@@ -166,9 +103,8 @@ const cameraLocationInScene = () => {
 
   var debugScene = new THREE.Scene();
 
-  let [roomObjects, markers] = makeRoom();
-  addElements(debugScene, roomObjects);
-  addElements(debugScene, makeLighting());
+  debugScene.add(room);
+  debugScene.add(lights.clone());
 
   var cameraPoseIndicator = new THREE.Object3D();
   cameraPoseIndicator.matrixAutoUpdate = false;
