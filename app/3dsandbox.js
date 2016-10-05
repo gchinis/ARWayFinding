@@ -47,7 +47,7 @@ const createAxes = () => {
   return axes;
 };
 
-const makeARView = (video) => {
+const makeARView = (video, cameraProjectionMatrix) => {
   var renderer = new THREE.WebGLRenderer();
   renderer.autoClear = false;
   renderer.setClearColor(0xffffff);
@@ -58,6 +58,7 @@ const makeARView = (video) => {
 
   var camera = new THREE.Camera();
   camera.matrixAutoUpdate = false;
+  camera.projectionMatrix.copy(cameraProjectionMatrix);
   scene.add(camera);
 
   // To display the video, first create a texture from it.
@@ -83,14 +84,18 @@ const makeARView = (video) => {
   videoScene.add(videoPlane);
   videoScene.add(videoCamera);
 
-  const updateFrame = () => {
+  const updateFrame = (cameraTransform) => {
     renderer.clear();
     videoTex.needsUpdate = true;
     renderer.render(videoScene, videoCamera);
     renderer.render(scene, camera);
+
+    if (cameraTransform) {
+      camera.matrix.copy(cameraTransform);
+    }
   };
 
-  return { scene, camera, updateFrame };
+  return { scene, updateFrame };
 };
 
 const makeDebugView = (video, scene) => {
@@ -123,36 +128,26 @@ const makeDebugView = (video, scene) => {
   controls.staticMoving = true;
   controls.dynamicDampingFactor = 0.3;
 
-  const updateFrame = () => {
+  const updateFrame = (cameraTransform) => {
     controls.update();
 
     debugRenderer.clear();
     debugRenderer.render(scene, debugCamera);
     debugRenderer.render(debugScene, debugCamera);
+
+    if (cameraTransform) {
+      cameraPoseIndicator.matrix.copy(cameraTransform);
+      cameraPoseIndicator.visible = true;
+    } else {
+      cameraPoseIndicator.visible = false;
+    }
   };
 
-  return { debugScene, cameraPoseIndicator, updateFrame };
+  return { debugScene, updateFrame };
 };
 
 const cameraLocationInScene = () => {
   let video = document.getElementById('v');
-
-  let { room, lights, markers } = makeRoom();
-
-  let { scene, camera, updateFrame: updateARView } = makeARView(video);
-  let { debugScene, cameraPoseIndicator, updateFrame: updateDebugView } = makeDebugView(video, scene);
-
-
-  var robot = makeRobot();
-  robot.position.set(-1.2, 0, 0);
-  scene.add(robot);
-
-  scene.add(lights);
-
-
-  debugScene.add(room);
-  debugScene.add(lights.clone());
-
 
   navigator.mediaDevices.getUserMedia({
     video: {
@@ -164,28 +159,34 @@ const cameraLocationInScene = () => {
 
     return makeMarkerDetector('camera/camera_para.dat', [{ id: 2, size: 0.21 }]);
   }).then(({detectMarkers, cameraProjectionMatrix}) => {
-    camera.projectionMatrix.copy(cameraProjectionMatrix);
+    let { room, lights, markers } = makeRoom();
+
+    let { scene, updateFrame: updateARView } = makeARView(video, cameraProjectionMatrix);
+    let { debugScene, updateFrame: updateDebugView } = makeDebugView(video, scene);
+
+    var robot = makeRobot();
+    robot.position.set(-1.2, 0, 0);
+    scene.add(robot);
+
+    scene.add(lights);
+
+    debugScene.add(room);
+    debugScene.add(lights.clone());
 
     function tick() {
       requestAnimationFrame(tick);
 
       let seenMarkers = detectMarkers(video);
+      let cameraTransform;
       if (seenMarkers.length > 0) {
-        let cameraTransform = seenMarkers[0].cameraTransform.clone()
+        cameraTransform = seenMarkers[0].cameraTransform.clone()
               .premultiply(markers[0].matrixWorld);
-
-        camera.matrix.copy(cameraTransform);
-        cameraPoseIndicator.matrix.copy(cameraTransform);
-
-        cameraPoseIndicator.visible = true;
-      } else {
-        cameraPoseIndicator.visible = false;
       }
 
       //arController.debugDraw();
 
-      updateARView();
-      updateDebugView();
+      updateARView(cameraTransform);
+      updateDebugView(cameraTransform);
     }
 
     tick();
