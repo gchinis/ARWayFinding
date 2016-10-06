@@ -156,6 +156,34 @@ const makeAnimationFrameSource = (value) => {
     Rx.Scheduler.requestAnimationFrame);
 };
 
+const makeCameraTransformsStream = (video, detectMarkers, markers) => {
+  let seenMarkers = [];
+  let lastTransform = new THREE.Matrix4();
+
+  let rawTransforms = makeAnimationFrameSource(video)
+        .map((video) => {
+          seenMarkers = detectMarkers(video, seenMarkers);
+          if (seenMarkers.length > 0) {
+            lastTransform = seenMarkers[0].cameraTransform.clone().premultiply(markers[0].matrixWorld);
+          } else {
+            seenMarkers = [];
+          }
+          return lastTransform;
+        });
+
+  return Rx.Observable.zip(
+    rawTransforms,
+    rawTransforms.skip(1),
+    rawTransforms.skip(2),
+    (t1, t2, t3) => {
+      let average = new THREE.Matrix4();
+      for (let i = 0; i < 16; i += 1) {
+        average.elements[i] = (t1.elements[i] + t2.elements[i] + t3.elements[i]) / 3;
+      }
+      return average;
+    });
+};
+
 const cameraLocationInScene = () => {
   let video = document.getElementById('v');
 
@@ -185,16 +213,7 @@ const cameraLocationInScene = () => {
 
     let seenMarkers = [];
 
-    let cameraTransforms = makeAnimationFrameSource(video)
-          .map((video) => {
-            seenMarkers = detectMarkers(video, seenMarkers);
-            if (seenMarkers.length > 0) {
-              return seenMarkers[0].cameraTransform.clone().premultiply(markers[0].matrixWorld);
-            } else {
-              seenMarkers = [];
-              return undefined;
-            }
-          });
+    let cameraTransforms = makeCameraTransformsStream(video, detectMarkers, markers);
 
     cameraTransforms.forEach(updateARView);
     cameraTransforms.forEach(updateDebugView);
