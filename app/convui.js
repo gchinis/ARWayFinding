@@ -3,9 +3,18 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 
-const Chat = (props) => {
-  return (
-      <li className="chat-bubble">{props.text}{props.button ? props.button : ""}</li>
+const Container = (props) => {
+  return (<div className="container">
+      <div className="title"><b>ROBB</b> THE VIRTUAL ROBOT</div>
+
+      <div className="robot">
+        <img src="assets/robot.png" />
+      </div>
+
+      <div id="chats">
+        <Dialogue {...props} />
+      </div>
+    </div>
   );
 };
 
@@ -26,22 +35,9 @@ const Dialogue = (props) => {
   );
 };
 
-const Container = (props) => {
-  return (<div className="container">
-      <div className="title"><b>ROBB</b> THE VIRTUAL ROBOT</div>
-
-      <div className="robot">
-        <img src="assets/robot.png" />
-      </div>
-
-      <div id="chats">
-        <Dialogue {...props} />
-      </div>
-
-      <div className="help">
-        <img src="assets/call-store-assistant.png" />
-      </div>
-    </div>
+const Chat = (props) => {
+  return (
+      <li className="chat-bubble">{props.text}{props.button ? props.button : ""}</li>
   );
 };
 
@@ -56,6 +52,7 @@ const TypingIndicator = () => {
     </li>
   );
 }
+
 const Robb = React.createClass({
   getInitialState() {
     return ({chats: []});
@@ -79,14 +76,13 @@ const Robb = React.createClass({
   }
 });
 
-
 const FirstPage = () => {
   var robb = [
     {key: 0, wait: 1000, text: "Hi, my name is Robb."},
     {key: 1, wait: 4000, text: "Are you looking for a product? I can show you the way to any product in this store."},
-    {key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?" }
+    //{key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so I can guide you. Are you okay with that?" }
     //This CameraAccess thing is broken for ReactJS rendering issues but we should be rendering some button here, as below
-    //{key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?", button: <CameraAccess /> }
+    {key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?", button: <CameraAccess /> }
   ];
   return(
     <Robb chats={robb} /> 

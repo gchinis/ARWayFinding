@@ -1,22 +1,23 @@
 body {
-    background-color: #2e4051;
-    color: #FFFFFF;
-    font-family: 'Open Sans', sans-serif;
-}
-
-.container {
-  max-width: 350px;
-  max-height: 500px;
-  margin: 0 auto;
+  color: #FFFFFF;
+  margin: 0px;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #2e4051;
 }
 
 .help {
   position: absolute;
   bottom: 0;
+  width: 100%;
 }
 
-.help img {
-  width: 350px;
+.help .button {
+  background: #344452;
+  width: 100%;
+  opacity: 0.85;
+  height: 20px;
+  text-align: center;
+  padding: 15px;
 }
 
 .robot {
@@ -29,16 +30,21 @@ body {
   width: 50%;
 }
 
-
 .title {
-    font-family: "Helvetica", SansSerif;
-    text-align: center;
-    padding: 10px;
-    letter-spacing: 2px;
+  font-family: "Helvetica", SansSerif;
+  text-align: center;
+  padding: 10px;
+  letter-spacing: 2px;
+}
+
+#chats {
+  width: 300px;
+  margin: 0 auto;
 }
 
 #chats ul {
   list-style-type: none;
+  -webkit-padding-start: 0px;
 }
 
 #chats ul li {
@@ -86,16 +92,17 @@ body {
 }
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .blue-button {
     width: 100px;
     color: #FFFFFF;
     background: #4e92df;
-    border-radius: 10px;
-    margin: 10px auto;
-    padding: 5px 0px;
+    border-radius: 8px;
+    margin: 0px auto;
+    margin-top: 5px;
+    padding: 10px 0px;
     text-align: center;
 }
 
@@ -103,19 +110,19 @@ a {
   text-decoration: none;
 }
 
+.video-background {
+  min-width: auto;
+  min-height: auto;
+  background-color: #2e4051;
+}
+
 #video-container {
-  margin: 2em auto 0;
-  width: 300px;
-  background: white;
+  width: auto;
+  height: 100%;
   text-align: center;
-  -webkit-box-shadow: 0 1px 10px #D9D9D9;
-  -moz-box-shadow: 0 1px 10px #D9D9D9;
-  -ms-box-shadow: 0 1px 10px #D9D9D9;
-  -o-box-shadow: 0 1px 10px #D9D9D9;
-  box-shadow: 0 1px 10px #D9D9D9;
 }
 
 #video-container video {
-  width: 300px;
-  margin: 0 auto;
+  width: auto;
+  height: 100%;
 }

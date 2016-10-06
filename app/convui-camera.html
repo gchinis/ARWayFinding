@@ -13,9 +13,7 @@
     <meta charset="utf-8">
   </head>
   <body>
-    <div class="container">
-      <div class="title"><b>ROBB</b> THE VIRTUAL ROBOT</div>
-
+    <div id="container" class="video-background">
       <div id="chats">
         <div id="chat-list"></div>
       </div>
@@ -25,12 +23,13 @@
       </div>
 
       <div class="help">
-        <img src="assets/call-store-assistant.png" />
+        <div class="button">
+          Call store assistant
+        </div>
       </div>
     </div>
 
     <script src="bundle.js"></script>
-    <script>window.conversationalUI();</script>
     <script>window.cameraStream();</script>
 
   </body>
