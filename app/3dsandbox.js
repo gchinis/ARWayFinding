@@ -175,7 +175,7 @@ const cameraLocationInScene = () => {
     let { debugScene, updateFrame: updateDebugView } = makeDebugView(video, scene);
 
     var robot = makeRobot();
-    robot.position.set(-1.2, 0, 0);
+    robot.position.set(-3.25, 0, 0.7);
     scene.add(robot);
 
     scene.add(lights);

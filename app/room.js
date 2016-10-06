@@ -20,7 +20,7 @@ const makeRoom = () => {
   let room = new THREE.Object3D();
 
   let walls = new THREE.Mesh(
-    new THREE.BoxGeometry(4, 2.5, 6, 5, 5, 5),
+    new THREE.BoxGeometry(8.5, 2.5, 13, 10, 10, 10),
     //new THREE.BoxGeometry(1, 1, 1),
     new THREE.MeshLambertMaterial({
       color: 0x00ffff,
@@ -53,7 +53,7 @@ const makeRoom = () => {
   pseudoMarker.add(markerSurface);
   //pseudoMarker.add(createAxes());
   pseudoMarker.rotation.y = Math.PI / 2;
-  pseudoMarker.position.set(-1.98, 1.5, 0);
+  pseudoMarker.position.set(-4.24, 1.5, 2);
   room.add(pseudoMarker);
   markers.push(pseudoMarker);
 
