@@ -183,12 +183,17 @@ const cameraLocationInScene = () => {
     debugScene.add(room);
     debugScene.add(lights.clone());
 
+    let seenMarkers = [];
+
     let cameraTransforms = makeAnimationFrameSource(video)
           .map((video) => {
-            let seenMarkers = detectMarkers(video);
-            return seenMarkers.length > 0 ?
-              seenMarkers[0].cameraTransform.clone().premultiply(markers[0].matrixWorld)
-              : undefined;
+            seenMarkers = detectMarkers(video, seenMarkers);
+            if (seenMarkers.length > 0) {
+              return seenMarkers[0].cameraTransform.clone().premultiply(markers[0].matrixWorld);
+            } else {
+              seenMarkers = [];
+              return undefined;
+            }
           });
 
     cameraTransforms.forEach(updateARView);
