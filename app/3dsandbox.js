@@ -164,7 +164,7 @@ const makeCameraTransformsStream = (video, detectMarkers, markers) => {
         .map((video) => {
           seenMarkers = detectMarkers(video, seenMarkers);
           if (seenMarkers.length > 0) {
-            lastTransform = seenMarkers[0].cameraTransform.clone().premultiply(markers[0].matrixWorld);
+            lastTransform = seenMarkers[0].cameraTransform.clone().premultiply(markers[seenMarkers[0].id].matrixWorld);
           } else {
             seenMarkers = [];
           }

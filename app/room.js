@@ -48,7 +48,8 @@ const makeRoom = (markerDefs) => {
   ground.rotation.x = -Math.PI / 2;
   room.add(ground);
 
-  let markers = markerDefs.map((markerDef) => {
+  let markers = [];
+  markerDefs.forEach((markerDef) => {
     let marker = new THREE.Object3D();
     let markerSurface = new THREE.Mesh(
       new THREE.PlaneGeometry(markerDef.size, markerDef.size, 1, 1),
@@ -62,7 +63,7 @@ const makeRoom = (markerDefs) => {
     marker.position.set(markerDef.position[0], markerDef.position[1], markerDef.position[2]);
     room.add(marker);
 
-    return marker;
+    markers[markerDef.id] = marker;
   });
 
   return { room, lights: makeLighting(), markers };
