@@ -80,9 +80,18 @@ const FirstPage = () => {
   var robb = [
     {key: 0, wait: 1000, text: "Hi, my name is Robb."},
     {key: 1, wait: 4000, text: "Are you looking for a product? I can show you the way to any product in this store."},
-    //{key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so I can guide you. Are you okay with that?" }
-    //This CameraAccess thing is broken for ReactJS rendering issues but we should be rendering some button here, as below
     {key: 2, wait: 5000, text: "I will ask your smartphone for permission to activate the camera, so you can see me. Are you okay with that?", button: <CameraAccess /> }
+  ];
+  return(
+    <Robb chats={robb} /> 
+  );
+}
+
+const SecondPage = () => {
+  var robb = [
+    {key: 0, wait: 1000, text: "Hey, good to finally see you!"},
+    {key: 1, wait: 4000, text: "I'm happy to help you find your way to the products in this store."},
+    {key: 2, wait: 5000, text: "What product are you looking for?"}
   ];
   return(
     <Robb chats={robb} /> 

@@ -5,6 +5,10 @@ body {
   background-color: #2e4051;
 }
 
+#container {
+  height: 100%;
+}
+
 .help {
   position: absolute;
   bottom: 0;
@@ -39,7 +43,10 @@ body {
 
 #chats {
   width: 300px;
-  margin: 0 auto;
+  position: absolute;
+  left: 50%; /* position the left edge of the element at the middle of the parent */
+  transform: translate(-50%);
+  z-index: 100;
 }
 
 #chats ul {
@@ -91,6 +98,10 @@ body {
     font-size: 0.8em;
 }
 
+.chat-bubble .opaque {
+  opacity: 0.4;
+}
+
 .typing-indicator span {
     height: 10px;
     width: 10px;
@@ -115,9 +126,9 @@ body {
 }
 
 @keyframes blink {
-    50% {
-        opacity: 1;
-    }
+  50% {
+    opacity: 1;
+  }
 }
 
 .hidden {
@@ -139,19 +150,18 @@ a {
   text-decoration: none;
 }
 
-.video-background {
-  min-width: auto;
-  min-height: auto;
-  background-color: #2e4051;
-}
 
 #video-container {
+  position: relative;
   width: auto;
   height: 100%;
   text-align: center;
+  z-index: -9999;
 }
 
 #video-container video {
   width: auto;
   height: 100%;
+  position: relative;
+  z-index: -9999;
 }
