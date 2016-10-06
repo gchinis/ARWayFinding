@@ -30,8 +30,21 @@ body {
     text-align: center;
 }
 
+.robot-overlay {
+  width: 300px;
+  position: absolute;
+  left: 50%; /* position the left edge of the element at the middle of the parent */
+  top: 50%; /* position the top edge of the element at the middle of the parent */
+  transform: translate(-50%);
+  z-index: 100;
+}
+
 .robot img {
   width: 50%;
+}
+
+.robot img.small {
+  width: 35%;
 }
 
 .title {
