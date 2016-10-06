@@ -6,7 +6,7 @@ import { artoolkit, ARController, ARCameraParam } from "./artoolkit.js";
 
 import { makeMarkerDetector } from "./marker.js";
 import { makeRobot } from "./robot.js";
-import { makeLighting, makeRoom, oneMarkerDefs } from "./room.js";
+import { makeLighting, makeRoom, multiMarkerDefs } from "./room.js";
 
 
 const createAxes = () => {
@@ -195,9 +195,9 @@ const cameraLocationInScene = () => {
     video.src = window.URL.createObjectURL(stream);
     video.play();
 
-    return makeMarkerDetector('camera/camera_para.dat', oneMarkerDefs);
+    return makeMarkerDetector('camera/camera_para.dat', multiMarkerDefs);
   }).then(({detectMarkers, cameraProjectionMatrix}) => {
-    let { room, lights, markers } = makeRoom(oneMarkerDefs);
+    let { room, lights, markers } = makeRoom(multiMarkerDefs);
 
     let { scene, updateFrame: updateARView } = makeARView(video, cameraProjectionMatrix);
     let { debugScene, updateFrame: updateDebugView } = makeDebugView(video, scene);

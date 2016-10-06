@@ -23,6 +23,33 @@ const oneMarkerDefs = [
   }
 ];
 
+const multiMarkerDefs = [
+  { id: 3,
+    size: 0.21,
+    position: [-4.24, 1.7, 2],
+    orientation: Math.PI / 2,
+    color: 0xaa0000
+  },
+  { id: 2,
+    size: 0.21,
+    position: [-2, 1.7, 6.49],
+    orientation: Math.PI,
+    color: 0x087026
+  },
+  { id: 1,
+    size: 0.21,
+    position: [0, 1.7, 6.49],
+    orientation: Math.PI,
+    color: 0x0000aa
+  },
+  { id: 4,
+    size: 0.21,
+    position: [0, 1.9, 1],
+    orientation: 0,
+    color: 0xaa00aa
+  },
+];
+
 const makeRoom = (markerDefs) => {
   let room = new THREE.Object3D();
 
@@ -72,5 +99,6 @@ const makeRoom = (markerDefs) => {
 
 export {
   oneMarkerDefs,
+  multiMarkerDefs,
   makeRoom
 }
