@@ -19,7 +19,7 @@ describe("welcome page", () => {
     document.body.removeChild(document.getElementById('testContainer'));
   });
 
-  it("Robb talks", () => {
+  xit("Robb talks", () => {
     ReactDOM.render(
       <FirstPage />,
       document.getElementById('testContainer')
