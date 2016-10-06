@@ -8,8 +8,10 @@ var Camera = React.createClass({
                navigator.mozGetUserMedia || 
                navigator.msGetUserMedia);
 
+             var videoConstraints = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) ? { facingMode: { exact: "environment" }} : true
+
              if (navigator.getUserMedia) {
-               navigator.getUserMedia({video: { facingMode: { exact: "environment" }}},
+               navigator.getUserMedia({video: videoConstraints},
                  function(localMediaStream) {
                    // Get a reference to the video element on the page.
                    var vid = document.getElementById('camera-stream');
