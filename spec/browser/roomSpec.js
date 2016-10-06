@@ -1,12 +1,12 @@
 const THREE = require('three');
 import { expect } from "chai";
 
-import { makeRoom } from "../../app/room.js";
+import { makeRoom, oneMarkerDefs } from "../../app/room.js";
 
 
 describe("Room 3D object", () => {
   it("is properly created", () => {
-    const { room, lights, markers } = makeRoom();
+    const { room, lights, markers } = makeRoom(oneMarkerDefs);
 
     expect(room).to.be.an.instanceof(THREE.Object3D);
     expect(room.children).to.not.be.empty;
